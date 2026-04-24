@@ -2,9 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByokuXMon - Record & Playback System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ByokuXMon - License System with Blacklist</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,816 +13,1053 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0a0a0a 0%, #1a0b0b 100%);
-            color: #fcfcfc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
+            padding: 16px;
         }
 
-        /* ========== THEME NATIVE RED ========== */
-        :root {
-            --primary: #ff5e5e;
-            --primary-dark: #cc3a3a;
-            --primary-light: #ff8888;
-            --bg-dark: #0a0505;
-            --bg-card: #1a0b0b;
-            --bg-elevated: #2b1212;
-            --text: #fcfcfc;
-            --text-muted: #cc8888;
-            --border: #451a1a;
-            --success: #10b981;
-            --warning: #f59e0b;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-card);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
             width: 100%;
-            background: rgba(10, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 16px 0;
         }
 
-        .nav-content {
+        /* Tabs */
+        .tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
+        .tab-btn {
+            background: rgba(26, 11, 11, 0.9);
+            border: 1px solid #ff5e5e;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: #ff8888;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+            flex: 1;
+            min-width: 110px;
+            text-align: center;
         }
 
-        .logo i {
-            color: var(--primary);
+        .tab-btn i {
             margin-right: 8px;
         }
 
-        .logo span {
-            color: var(--text);
+        .tab-btn.active {
+            background: #ff5e5e;
+            color: #1a0b0b;
         }
 
-        .logo .highlight {
-            color: var(--primary);
+        .tab-btn:hover {
+            background: #ff5e5e;
+            color: #1a0b0b;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 32px;
+        .tab-content {
+            display: none;
         }
 
-        .nav-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            padding-top: 80px;
-        }
-
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 50%, rgba(255, 94, 94, 0.15) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 94, 94, 0.15);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 14px;
-            color: var(--primary);
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-        }
-
-        .hero-title {
-            font-size: 64px;
-            font-weight: 800;
-            margin-bottom: 24px;
-            line-height: 1.2;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-desc {
-            font-size: 18px;
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: var(--bg-dark);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            margin-bottom: 48px;
-        }
-
-        /* Stats */
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        /* Section */
-        .section {
-            padding: 80px 0;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-title {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .section-title i {
-            color: var(--primary);
-            margin-right: 12px;
-        }
-
-        .section-desc {
-            color: var(--text-muted);
-            font-size: 16px;
+        .tab-content.active {
+            display: block;
         }
 
         /* Cards */
         .card {
-            background: rgba(26, 11, 11, 0.8);
+            background: rgba(26, 11, 11, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 32px;
-            border: 1px solid var(--border);
+            padding: 20px;
+            border: 1px solid #ff5e5e;
+            margin-bottom: 20px;
         }
 
-        /* Generator */
-        .generator-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
+        .card h2 {
+            color: #ff5e5e;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-left: 3px solid #ff5e5e;
+            padding-left: 12px;
         }
 
+        .card h2 i {
+            margin-right: 10px;
+        }
+
+        /* Input */
         .input-group {
             margin-bottom: 20px;
         }
 
         .input-group label {
             display: block;
+            color: #ff8888;
             margin-bottom: 8px;
-            color: var(--text-muted);
             font-size: 14px;
         }
 
         .input-group label i {
-            margin-right: 8px;
-            color: var(--primary);
+            margin-right: 6px;
         }
 
-        .input {
+        .input-group input {
             width: 100%;
-            padding: 14px 16px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        select.input {
-            cursor: pointer;
-        }
-
-        .loadstring-box {
-            background: var(--bg-dark);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .loadstring-code {
+            padding: 14px;
             background: #0a0505;
-            padding: 16px;
+            border: 1px solid #ff5e5e;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff8888;
+        }
+
+        button {
+            background: #ff5e5e;
+            color: #1a0b0b;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #ff8888;
+            transform: translateY(-2px);
+        }
+
+        .result-box {
+            background: #0a0505;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #ff5e5e30;
+        }
+
+        .key-display {
+            background: #000;
+            padding: 15px;
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            color: #0f0;
+            margin-bottom: 15px;
             word-break: break-all;
-            margin-bottom: 16px;
-            border: 1px solid var(--border);
+        }
+
+        .loadstring-display {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            color: #0f0;
+            word-break: break-all;
             max-height: 150px;
             overflow: auto;
+            margin-bottom: 15px;
         }
 
-        /* Mount Grid */
-        .mounts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
+        .timer {
+            background: #1a0b0b;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
 
-        .mount-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid var(--border);
-            transition: all 0.3s;
+        .timer i {
+            margin-right: 8px;
+            color: #ff5e5e;
         }
 
-        .mount-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
+        .status-box {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
 
-        .mount-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+        .status-valid {
+            background: rgba(0,255,0,0.1);
+            color: #0f0;
         }
 
-        .mount-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
+        .status-expired {
+            background: rgba(255,0,0,0.1);
+            color: #f00;
         }
 
-        .mount-stats {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 12px;
-            color: var(--text-muted);
+        .status-banned {
+            background: rgba(255,0,0,0.2);
+            color: #f00;
         }
 
-        .mount-download {
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
             width: 100%;
-            margin-top: 16px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            color: var(--text);
+            border-collapse: collapse;
+            font-size: 13px;
         }
 
-        .mount-download:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #333;
         }
 
-        /* Steps */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
+        th {
+            color: #ff5e5e;
         }
 
-        .step-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            border: 1px solid var(--border);
+        .status-online {
+            color: #0f0;
         }
 
-        .step-number {
-            width: 48px;
-            height: 48px;
-            background: var(--primary);
-            border-radius: 50%;
+        .status-offline {
+            color: #888;
+        }
+
+        .status-expired {
+            color: #ff8888;
+        }
+
+        .status-banned {
+            color: #ff4444;
+        }
+
+        .ban-btn {
+            background: #ff4444;
+            padding: 5px 10px;
+            font-size: 11px;
+            width: auto;
+        }
+
+        .unban-btn {
+            background: #44ff44;
+            color: #000;
+            padding: 5px 10px;
+            font-size: 11px;
+            width: auto;
+        }
+
+        .delete-btn {
+            background: #ff5e5e;
+            padding: 5px 10px;
+            font-size: 11px;
+            width: auto;
+        }
+
+        .admin-login {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0 auto 16px;
-            color: var(--bg-dark);
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .feature-icon {
-            width: 64px;
-            height: 64px;
-            background: rgba(255, 94, 94, 0.15);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-        }
-
-        .feature-icon i {
-            font-size: 32px;
-            color: var(--primary);
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--bg-card);
-            padding: 40px 0;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .social-links a {
-            color: var(--text-muted);
-            font-size: 24px;
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            color: var(--primary);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 36px;
-            }
-            .generator-grid {
-                grid-template-columns: 1fr;
-            }
-            .nav-links {
-                display: none;
-            }
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            .hero-stats {
-                gap: 24px;
-            }
-            .section-title {
-                font-size: 28px;
-            }
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: var(--bg-elevated);
-            padding: 12px 20px;
+        .admin-login input {
+            flex: 1;
+            padding: 12px;
+            background: #0a0505;
+            border: 1px solid #ff5e5e;
             border-radius: 12px;
-            border-left: 3px solid var(--primary);
-            transform: translateX(400px);
-            transition: transform 0.3s;
-            z-index: 1000;
+            color: white;
+            min-width: 150px;
         }
 
-        .notification.show {
-            transform: translateX(0);
+        .small-btn {
+            padding: 8px 16px;
+            width: auto;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #0a0505;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff5e5e;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #cc8888;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #b36b6b;
+            font-size: 11px;
+        }
+
+        .alert {
+            background: rgba(255,94,94,0.2);
+            border-left: 3px solid #ff5e5e;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .flex-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .card {
+                padding: 15px;
+            }
+            th, td {
+                font-size: 11px;
+                padding: 6px;
+            }
+            .tab-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+                min-width: 80px;
+            }
+            .stat-number {
+                font-size: 22px;
+            }
+            button {
+                padding: 10px 16px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <i class="fas fa-mountain"></i>
-                    <span>Byoku<span class="highlight">XMon</span></span>
-                </div>
-                <div class="nav-links">
-                    <a href="#home" class="nav-link active">Home</a>
-                    <a href="#generator" class="nav-link">Generator</a>
-                    <a href="#mounts" class="nav-link">Mounts</a>
-                    <a href="#guide" class="nav-link">Guide</a>
-                    <a href="#features" class="nav-link">Features</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+<div class="container">
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="user">
+            <i class="fas fa-key"></i> Get Key
+        </button>
+        <button class="tab-btn" data-tab="check">
+            <i class="fas fa-check-circle"></i> Check Key
+        </button>
+        <button class="tab-btn" data-tab="admin">
+            <i class="fas fa-shield-alt"></i> Admin Panel
+        </button>
+    </div>
 
-    <section id="home" class="hero">
-        <div class="hero-bg"></div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <i class="fas fa-circle-dot"></i> Version 2.1.0
-                </div>
-                <h1 class="hero-title">
-                    Record & <span class="gradient-text">Playback</span> System
-                </h1>
-                <p class="hero-desc">
-                    Rekam gerakan, simpan sebagai MOUNT, mainkan dengan Flip Mode, Reverse Mode, Auto Loop, dan banyak lagi!
-                </p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" id="quickCopy">
-                        <i class="fas fa-copy"></i> Copy Loadstring
-                    </button>
-                    <button class="btn btn-secondary" onclick="document.getElementById('generator').scrollIntoView({behavior: 'smooth'})">
-                        <i class="fas fa-wand-magic"></i> Custom Generator
-                    </button>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-value" id="mountCount">0</div>
-                        <div class="stat-label">Total Mounts</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">40+</div>
-                        <div class="stat-label">Animations</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">Playback Modes</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- TAB 1: USER GENERATE KEY -->
+    <div id="user" class="tab-content active">
+        <div class="card">
+            <h2><i class="fas fa-key"></i> Generate License Key</h2>
+            <p style="color: #cc8888; margin-bottom: 20px; font-size: 14px;">
+                Masukkan User ID Roblox untuk mendapatkan key. Key berlaku 24 jam.
+            </p>
 
-    <section id="generator" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-code"></i> Custom Loadstring Generator
-                </h2>
-                <p class="section-desc">Generate loadstring khusus dengan theme favoritmu</p>
+            <div class="input-group">
+                <label><i class="fas fa-user"></i> Roblox User ID</label>
+                <input type="number" id="genUserId" placeholder="Contoh: 1234567890">
             </div>
 
-            <div class="card">
-                <div class="generator-grid">
-                    <div>
-                        <div class="input-group">
-                            <label><i class="fas fa-user"></i> Roblox User ID</label>
-                            <input type="text" id="userId" placeholder="Contoh: 1234567890" class="input">
-                            <small style="color: var(--text-muted);">Cek di URL profil Roblox mu</small>
-                        </div>
-                        <div class="input-group">
-                            <label><i class="fas fa-palette"></i> Theme</label>
-                            <select id="theme" class="input">
-                                <option value="Native Red">🔥 Native Red (Default)</option>
-                                <option value="Dark Blue">💙 Dark Blue</option>
-                                <option value="Neon Green">💚 Neon Green</option>
-                                <option value="Purple Haze">💜 Purple Haze</option>
-                                <option value="Golden">👑 Golden Empire</option>
-                                <option value="Cyberpunk">💗 Cyberpunk Pink</option>
-                            </select>
-                        </div>
+            <button id="generateBtn">
+                <i class="fas fa-sync"></i> Generate Key
+            </button>
+
+            <div id="resultArea" style="display: none;">
+                <div class="result-box">
+                    <div class="key-display" id="keyDisplay"></div>
+                    <div class="timer" id="timerDisplay">
+                        <i class="fas fa-hourglass-half"></i> Loading...
                     </div>
-                    <div class="loadstring-box">
-                        <div class="loadstring-code" id="loadstringDisplay">
-                            -- Pilih User ID dan Theme dulu
-                        </div>
-                        <button class="btn btn-primary" id="generateBtn" style="width: 100%;">
-                            <i class="fas fa-sync"></i> Generate Loadstring
+                    <div class="loadstring-display" id="loadstringDisplay"></div>
+                    <div class="flex-buttons">
+                        <button id="copyKeyBtn" style="flex:1">
+                            <i class="fas fa-copy"></i> Copy Key
+                        </button>
+                        <button id="copyLoadstringBtn" style="flex:1">
+                            <i class="fas fa-code"></i> Copy Loadstring
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section id="mounts" class="section" style="background: rgba(255, 94, 94, 0.02);">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-mountain"></i> Community Mounts
-                </h2>
-                <p class="section-desc">Download mount hasil karya user lain</p>
-            </div>
-            <div class="mounts-grid" id="mountsGrid">
-                <div class="mount-card">
-                    <div class="mount-header">
-                        <span class="mount-name">Velora</span>
-                        <i class="fas fa-crown" style="color: #ffd700;"></i>
-                    </div>
-                    <div class="mount-stats">
-                        <span><i class="fas fa-film"></i> 1,234 frames</span>
-                        <span><i class="fas fa-user"></i> ByokuXMon</span>
-                    </div>
-                    <button class="btn mount-download">
-                        <i class="fas fa-download"></i> Download Mount
-                    </button>
-                </div>
-                <div class="mount-card">
-                    <div class="mount-header">
-                        <span class="mount-name">Heaven</span>
-                    </div>
-                    <div class="mount-stats">
-                        <span><i class="fas fa-film"></i> 856 frames</span>
-                        <span><i class="fas fa-user"></i> User123</span>
-                    </div>
-                    <button class="btn mount-download">
-                        <i class="fas fa-download"></i> Download Mount
-                    </button>
-                </div>
-                <div class="mount-card">
-                    <div class="mount-header">
-                        <span class="mount-name">ShadowDash</span>
-                    </div>
-                    <div class="mount-stats">
-                        <span><i class="fas fa-film"></i> 2,341 frames</span>
-                        <span><i class="fas fa-user"></i> ProPlayer</span>
-                    </div>
-                    <button class="btn mount-download">
-                        <i class="fas fa-download"></i> Download Mount
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="guide" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-book-open"></i> Panduan Lengkap
-                </h2>
-                <p class="section-desc">Cara pake script ByokuXMon Record & Playback System</p>
-            </div>
-
-            <div class="steps">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3>Copy Loadstring</h3>
-                    <p style="color: var(--text-muted);">Copy loadstring dari generator atau klik tombol copy di atas</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>Execute di Executor</h3>
-                    <p style="color: var(--text-muted);">Paste di executor favoritmu (Synapse, Krnl, etc) lalu execute</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3>Buka Menu</h3>
-                    <p style="color: var(--text-muted);">Tekan tombol "Open Menu" yang muncul di layar</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <h3>Start Recording!</h3>
-                    <p style="color: var(--text-muted);">Klik Show Recording UI, lalu REC untuk mulai merekam</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="features" class="section" style="background: rgba(255, 94, 94, 0.02);">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-star"></i> Fitur Unggulan
-                </h2>
-                <p class="section-desc">Semua fitur yang tersedia di script ByokuXMon</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-circle-dot"></i>
-                    </div>
-                    <h3>Record System</h3>
-                    <p style="color: var(--text-muted);">Rekam gerakan dengan akurat, support tool dan jump detection</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-play"></i>
-                    </div>
-                    <h3>Playback Modes</h3>
-                    <p style="color: var(--text-muted);">Normal, Flip Mode (hadap belakang), Reverse Mode (mundur)</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
-                    <h3>Merge System</h3>
-                    <p style="color: var(--text-muted);">Gabungkan beberapa replay jadi satu MOUNT keren</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-ninja"></i>
-                    </div>
-                    <h3>Animation Pack</h3>
-                    <p style="color: var(--text-muted);">40+ animation pack siap pakai (Vampire, Hero, Ninja, dll)</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-copy"></i>
-                    </div>
-                    <h3>Copy Avatar</h3>
-                    <p style="color: var(--text-muted);">Copy avatar player online/offline, auto apply setelah respawn</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Protection</h3>
-                    <p style="color: var(--text-muted);">Noclip, God Mode, Anti AFK, Bypass Admin Detection</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="social-links">
-                <a href="#"><i class="fab fa-discord"></i></a>
-                <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-            </div>
-            <p style="color: var(--text-muted);">© 2026 ByokuXMon - Record & Playback System</p>
-            <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">Discord: discord.gg/GyM9ZSdXh</p>
-        </div>
-    </footer>
-
-    <div id="notification" class="notification">
-        <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-        <span id="notifMessage">Copied!</span>
     </div>
 
-    <script>
-        // Show notification
-        function showNotification(message) {
-            const notif = document.getElementById('notification');
-            document.getElementById('notifMessage').textContent = message;
-            notif.classList.add('show');
-            setTimeout(() => {
-                notif.classList.remove('show');
-            }, 2000);
-        }
+    <!-- TAB 2: CHECK KEY VALIDITY -->
+    <div id="check" class="tab-content">
+        <div class="card">
+            <h2><i class="fas fa-check-circle"></i> Check Key Status</h2>
+            <p style="color: #cc8888; margin-bottom: 20px; font-size: 14px;">
+                Masukkan User ID atau Key untuk cek status
+            </p>
 
-        // Copy text
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text);
-            showNotification('Loadstring copied!');
-        }
+            <div class="input-group">
+                <label><i class="fas fa-id-card"></i> User ID atau Key</label>
+                <input type="text" id="checkUserId" placeholder="Masukkan User ID atau Key">
+            </div>
 
-        // Generate loadstring
-        function generateLoadstring(userId, theme) {
-            if (!userId || userId === '') {
-                return `-- Masukkan User ID dulu bang!
--- Klik di box input User ID di atas`;
+            <button id="checkBtn">
+                <i class="fas fa-search"></i> Check Status
+            </button>
+
+            <div id="checkResult" style="display: none; margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <!-- TAB 3: ADMIN PANEL -->
+    <div id="admin" class="tab-content">
+        <div class="card">
+            <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+            
+            <div class="admin-login" id="adminLogin">
+                <input type="password" id="adminPassword" placeholder="Password Admin">
+                <button id="loginAdminBtn" class="small-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </div>
+
+            <div id="adminContent" style="display: none;">
+                <!-- Stats -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="onlineUsers">0</div>
+                        <div class="stat-label">Online</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="expiredUsers">0</div>
+                        <div class="stat-label">Expired</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="bannedUsers">0</div>
+                        <div class="stat-label">Banned</div>
+                    </div>
+                </div>
+
+                <!-- Blacklist Management -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #ff5e5e; margin-bottom: 10px;">
+                        <i class="fas fa-ban"></i> Blacklist / Ban User
+                    </h3>
+                    <div class="flex-buttons">
+                        <input type="number" id="banUserId" placeholder="User ID to Ban" style="flex:2; background:#0a0505; border:1px solid #ff5e5e; border-radius:12px; padding:12px; color:white;">
+                        <button id="banUserBtn" class="small-btn" style="background:#ff4444;">
+                            <i class="fas fa-ban"></i> Ban
+                        </button>
+                    </div>
+                </div>
+
+                <!-- User Table -->
+                <div class="table-container">
+                    <h3 style="color: #ff5e5e; margin-bottom: 10px;">
+                        <i class="fas fa-users"></i> User List
+                    </h3>
+                    <table id="userTable">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Key</th>
+                                <th>Expired</th>
+                                <th>Status</th>
+                                <th>Last Active</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr><td colspan="6" style="text-align:center;">No users</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button id="logoutAdminBtn" class="small-btn" style="margin-top: 20px; background:#333;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <i class="fas fa-mountain"></i> ByokuXMon - Record & Playback System
+    </div>
+</div>
+
+<script>
+    // ========== DATA STORAGE ==========
+    let users = [];  // { userId, key, expiredAt, lastActive, status }
+    let blacklist = [];  // [userId]
+    let ADMIN_PASSWORD = "byokuxmon2024";  // Ganti dengan password lo sendiri
+    
+    // Load data dari localStorage
+    function loadData() {
+        let savedUsers = localStorage.getItem('byokuxmon_users');
+        let savedBlacklist = localStorage.getItem('byokuxmon_blacklist');
+        
+        if (savedUsers) {
+            users = JSON.parse(savedUsers);
+        } else {
+            users = [];
+        }
+        
+        if (savedBlacklist) {
+            blacklist = JSON.parse(savedBlacklist);
+        } else {
+            blacklist = [];
+        }
+    }
+    
+    // Save data ke localStorage
+    function saveData() {
+        localStorage.setItem('byokuxmon_users', JSON.stringify(users));
+        localStorage.setItem('byokuxmon_blacklist', JSON.stringify(blacklist));
+    }
+    
+    // Generate random key
+    function generateKey(userId) {
+        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let key = '';
+        for (let i = 0; i < 16; i++) {
+            key += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return key + '-' + userId;
+    }
+    
+    // Generate expired time (24 jam dari sekarang)
+    function getExpiredTime() {
+        let now = new Date();
+        now.setHours(now.getHours() + 24);
+        return now.toISOString();
+    }
+    
+    // Cek apakah user expired
+    function isExpired(expiredAt) {
+        let now = new Date();
+        let expired = new Date(expiredAt);
+        return now > expired;
+    }
+    
+    // Cek apakah user di ban
+    function isBanned(userId) {
+        return blacklist.includes(userId.toString());
+    }
+    
+    // Update status user
+    function updateUserStatus(userId, isOnline) {
+        let user = users.find(u => u.userId === userId.toString());
+        if (user) {
+            user.lastActive = new Date().toISOString();
+            user.status = isOnline ? 'online' : 'offline';
+            saveData();
+        }
+    }
+    
+    // Generate atau update user
+    function generateOrUpdateUser(userId) {
+        let userIdStr = userId.toString();
+        
+        // Cek apakah user di ban
+        if (isBanned(userIdStr)) {
+            return { success: false, reason: 'banned' };
+        }
+        
+        let existingUser = users.find(u => u.userId === userIdStr);
+        
+        if (existingUser) {
+            // Cek expired
+            if (isExpired(existingUser.expiredAt)) {
+                // Update key baru
+                existingUser.key = generateKey(userIdStr);
+                existingUser.expiredAt = getExpiredTime();
+                existingUser.lastActive = new Date().toISOString();
+                existingUser.status = 'active';
+                saveData();
+                return { success: true, key: existingUser.key, expiredAt: existingUser.expiredAt, isNew: false };
+            } else {
+                // Key masih valid
+                existingUser.lastActive = new Date().toISOString();
+                existingUser.status = 'active';
+                saveData();
+                return { success: true, key: existingUser.key, expiredAt: existingUser.expiredAt, isNew: false };
             }
-            return `loadstring(game:HttpGet("https://raw.githubusercontent.com/ByokuXMon/RecordPlayback/main/main.lua"))()\n-- User ID: ${userId}\n-- Theme: ${theme}\n-- Happy Recording!`;
+        } else {
+            // User baru
+            let newKey = generateKey(userIdStr);
+            let expiredAt = getExpiredTime();
+            let newUser = {
+                userId: userIdStr,
+                key: newKey,
+                expiredAt: expiredAt,
+                lastActive: new Date().toISOString(),
+                status: 'active'
+            };
+            users.push(newUser);
+            saveData();
+            return { success: true, key: newKey, expiredAt: expiredAt, isNew: true };
         }
+    }
+    
+    // Validate key
+    function validateKey(userId, key) {
+        let userIdStr = userId.toString();
+        
+        if (isBanned(userIdStr)) {
+            return { valid: false, reason: 'banned' };
+        }
+        
+        let user = users.find(u => u.userId === userIdStr && u.key === key);
+        if (!user) {
+            return { valid: false, reason: 'invalid' };
+        }
+        
+        if (isExpired(user.expiredAt)) {
+            return { valid: false, reason: 'expired' };
+        }
+        
+        user.lastActive = new Date().toISOString();
+        user.status = 'online';
+        saveData();
+        
+        return { valid: true, expiredAt: user.expiredAt };
+    }
+    
+    // Generate loadstring
+    function generateLoadstring(userId, key) {
+        let scriptUrl = "https://raw.githubusercontent.com/ByokuXMon/RecordPlayback/main/main.lua";
+        let apiUrl = window.location.href;
+        
+        return `-- ByokuXMon Record & Playback System
+-- License Key System
 
-        // Quick copy
-        document.getElementById('quickCopy').addEventListener('click', () => {
-            const defaultLoadstring = `loadstring(game:HttpGet("https://raw.githubusercontent.com/ByokuXMon/RecordPlayback/main/main.lua"))()`;
-            copyToClipboard(defaultLoadstring);
-        });
+local userId = "${userId}"
+local licenseKey = "${key}"
+local apiUrl = "${apiUrl}"
 
-        // Generate button
-        document.getElementById('generateBtn').addEventListener('click', () => {
-            const userId = document.getElementById('userId').value;
-            const theme = document.getElementById('theme').value;
-            const loadstring = generateLoadstring(userId, theme);
-            document.getElementById('loadstringDisplay').textContent = loadstring;
-            copyToClipboard(loadstring);
-        });
+local function validateLicense()
+    local success, response = pcall(function()
+        return game:HttpGet(apiUrl .. "?action=validate&userId=" .. userId .. "&key=" .. licenseKey)
+    end)
+    
+    if not success then
+        warn("Failed to validate license")
+        return false
+    end
+    
+    local result = game:GetService("HttpService"):JSONDecode(response)
+    
+    if result.valid then
+        print("License valid! Expires at: " .. result.expiredAt)
+        return true
+    else
+        warn("License invalid: " .. (result.reason or "unknown"))
+        return false
+    end
+end
 
-        // Mount count
-        document.getElementById('mountCount').textContent = '150+';
+if not validateLicense() then
+    error("License invalid or expired! Please generate new key at: " .. apiUrl)
+end
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = link.getAttribute('href');
-                if (target && target !== '#') {
-                    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+-- Load main script
+loadstring(game:HttpGet("${scriptUrl}"))()
+`;
+    }
+    
+    // Get sisa waktu
+    function getTimeRemaining(expiredAt) {
+        let now = new Date();
+        let expired = new Date(expiredAt);
+        let diff = expired - now;
+        
+        if (diff <= 0) return "Expired";
+        
+        let hours = Math.floor(diff / (1000 * 60 * 60));
+        let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        return `${hours}h ${minutes}m ${seconds}s`;
+    }
+    
+    // Format waktu
+    function formatDate(dateString) {
+        let date = new Date(dateString);
+        return date.toLocaleString();
+    }
+    
+    // Hitung statistik online (simulasi)
+    function getOnlineCount() {
+        // Di real implementation, ini akan diupdate dari server
+        return users.filter(u => u.status === 'online' && !isExpired(u.expiredAt) && !isBanned(u.userId)).length;
+    }
+    
+    function getExpiredCount() {
+        return users.filter(u => isExpired(u.expiredAt) && !isBanned(u.userId)).length;
+    }
+    
+    function getBannedCount() {
+        return blacklist.length;
+    }
+    
+    // Render admin table
+    function renderAdminTable() {
+        let tbody = document.getElementById('userTableBody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        
+        for (let user of users) {
+            let expired = isExpired(user.expiredAt);
+            let banned = isBanned(user.userId);
+            let statusText = '';
+            let statusClass = '';
+            
+            if (banned) {
+                statusText = 'BANNED';
+                statusClass = 'status-banned';
+            } else if (expired) {
+                statusText = 'EXPIRED';
+                statusClass = 'status-expired';
+            } else {
+                statusText = user.status === 'online' ? 'ONLINE' : 'OFFLINE';
+                statusClass = user.status === 'online' ? 'status-online' : 'status-offline';
+            }
+            
+            let row = tbody.insertRow();
+            row.insertCell(0).innerHTML = user.userId;
+            row.insertCell(1).innerHTML = user.key;
+            row.insertCell(2).innerHTML = formatDate(user.expiredAt);
+            row.insertCell(3).innerHTML = `<span class="${statusClass}">${statusText}</span>`;
+            row.insertCell(4).innerHTML = user.lastActive ? formatDate(user.lastActive) : '-';
+            
+            let actionCell = row.insertCell(5);
+            if (!banned) {
+                let banBtn = document.createElement('button');
+                banBtn.innerHTML = '<i class="fas fa-ban"></i> Ban';
+                banBtn.className = 'ban-btn small-btn';
+                banBtn.onclick = function() {
+                    if (confirm(`Ban user ${user.userId}?`)) {
+                        if (!blacklist.includes(user.userId)) {
+                            blacklist.push(user.userId);
+                            saveData();
+                            renderAdminTable();
+                            updateStats();
+                        }
+                    }
+                };
+                actionCell.appendChild(banBtn);
+            } else {
+                let unbanBtn = document.createElement('button');
+                unbanBtn.innerHTML = '<i class="fas fa-check"></i> Unban';
+                unbanBtn.className = 'unban-btn small-btn';
+                unbanBtn.onclick = function() {
+                    let index = blacklist.indexOf(user.userId);
+                    if (index > -1) {
+                        blacklist.splice(index, 1);
+                        saveData();
+                        renderAdminTable();
+                        updateStats();
+                    }
+                };
+                actionCell.appendChild(unbanBtn);
+            }
+            
+            let deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+            deleteBtn.className = 'delete-btn small-btn';
+            deleteBtn.style.marginLeft = '5px';
+            deleteBtn.onclick = function() {
+                if (confirm(`Delete user ${user.userId}?`)) {
+                    let index = users.findIndex(u => u.userId === user.userId);
+                    if (index > -1) {
+                        users.splice(index, 1);
+                        saveData();
+                        renderAdminTable();
+                        updateStats();
+                    }
                 }
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-            });
+            };
+            actionCell.appendChild(deleteBtn);
+        }
+        
+        if (users.length === 0) {
+            let row = tbody.insertRow();
+            row.insertCell(0).colSpan = 6;
+            row.insertCell(0).innerHTML = 'No users found';
+            row.insertCell(0).style.textAlign = 'center';
+        }
+    }
+    
+    function updateStats() {
+        document.getElementById('totalUsers').innerText = users.length;
+        document.getElementById('onlineUsers').innerText = getOnlineCount();
+        document.getElementById('expiredUsers').innerText = getExpiredCount();
+        document.getElementById('bannedUsers').innerText = getBannedCount();
+    }
+    
+    // Timer update
+    let timerInterval = null;
+    
+    function startTimer(expiredAt, elementId) {
+        if (timerInterval) clearInterval(timerInterval);
+        
+        timerInterval = setInterval(() => {
+            let remaining = getTimeRemaining(expiredAt);
+            let element = document.getElementById(elementId);
+            if (element) {
+                if (remaining === "Expired") {
+                    element.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Key has expired! Generate new key.';
+                } else {
+                    element.innerHTML = `<i class="fas fa-hourglass-half"></i> Remaining: ${remaining}`;
+                }
+            }
+        }, 1000);
+    }
+    
+    // ========== EVENT HANDLER ==========
+    loadData();
+    
+    // Generate Button
+    document.getElementById('generateBtn').addEventListener('click', function() {
+        let userId = document.getElementById('genUserId').value;
+        
+        if (!userId) {
+            alert('Masukkan User ID terlebih dahulu!');
+            return;
+        }
+        
+        let result = generateOrUpdateUser(userId);
+        
+        if (!result.success) {
+            if (result.reason === 'banned') {
+                alert('User ID ini telah di BAN! Tidak bisa generate key.');
+            }
+            return;
+        }
+        
+        let loadstring = generateLoadstring(userId, result.key);
+        
+        document.getElementById('keyDisplay').innerHTML = result.key;
+        document.getElementById('loadstringDisplay').innerHTML = loadstring;
+        document.getElementById('resultArea').style.display = 'block';
+        
+        startTimer(result.expiredAt, 'timerDisplay');
+        
+        // Update stats kalo admin login
+        if (document.getElementById('adminContent').style.display === 'block') {
+            renderAdminTable();
+            updateStats();
+        }
+    });
+    
+    // Copy Key
+    document.getElementById('copyKeyBtn').addEventListener('click', function() {
+        let key = document.getElementById('keyDisplay').innerHTML;
+        navigator.clipboard.writeText(key);
+        alert('Key copied!');
+    });
+    
+    // Copy Loadstring
+    document.getElementById('copyLoadstringBtn').addEventListener('click', function() {
+        let loadstring = document.getElementById('loadstringDisplay').innerHTML;
+        navigator.clipboard.writeText(loadstring);
+        alert('Loadstring copied!');
+    });
+    
+    // Check Button
+    document.getElementById('checkBtn').addEventListener('click', function() {
+        let input = document.getElementById('checkUserId').value;
+        let resultDiv = document.getElementById('checkResult');
+        
+        if (!input) {
+            alert('Masukkan User ID atau Key!');
+            return;
+        }
+        
+        // Cek apakah input adalah userId atau key
+        let user = users.find(u => u.userId === input || u.key === input);
+        
+        if (!user) {
+            resultDiv.innerHTML = `
+                <div class="status-box status-expired">
+                    <i class="fas fa-times-circle"></i> Key tidak ditemukan!
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+            return;
+        }
+        
+        let banned = isBanned(user.userId);
+        let expired = isExpired(user.expiredAt);
+        
+        if (banned) {
+            resultDiv.innerHTML = `
+                <div class="status-box status-banned">
+                    <i class="fas fa-ban"></i> Status: BANNED!<br>
+                    User ID: ${user.userId}
+                </div>
+            `;
+        } else if (expired) {
+            resultDiv.innerHTML = `
+                <div class="status-box status-expired">
+                    <i class="fas fa-clock"></i> Status: EXPIRED!<br>
+                    Generate key baru untuk melanjutkan.<br>
+                    Expired at: ${formatDate(user.expiredAt)}
+                </div>
+            `;
+        } else {
+            let remaining = getTimeRemaining(user.expiredAt);
+            resultDiv.innerHTML = `
+                <div class="status-box status-valid">
+                    <i class="fas fa-check-circle"></i> Status: VALID!<br>
+                    User ID: ${user.userId}<br>
+                    Key: ${user.key}<br>
+                    Remaining: ${remaining}<br>
+                    Last Active: ${formatDate(user.lastActive)}
+                </div>
+            `;
+        }
+        
+        resultDiv.style.display = 'block';
+    });
+    
+    // ========== ADMIN PANEL ==========
+    let isAdminLoggedIn = false;
+    
+    document.getElementById('loginAdminBtn').addEventListener('click', function() {
+        let password = document.getElementById('adminPassword').value;
+        
+        if (password === ADMIN_PASSWORD) {
+            isAdminLoggedIn = true;
+            document.getElementById('adminLogin').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            renderAdminTable();
+            updateStats();
+        } else {
+            alert('Password salah!');
+        }
+    });
+    
+    document.getElementById('logoutAdminBtn').addEventListener('click', function() {
+        isAdminLoggedIn = false;
+        document.getElementById('adminLogin').style.display = 'flex';
+        document.getElementById('adminContent').style.display = 'none';
+        document.getElementById('adminPassword').value = '';
+    });
+    
+    // Ban User dari admin panel
+    document.getElementById('banUserBtn').addEventListener('click', function() {
+        let userId = document.getElementById('banUserId').value;
+        
+        if (!userId) {
+            alert('Masukkan User ID yang akan di ban!');
+            return;
+        }
+        
+        if (!blacklist.includes(userId)) {
+            blacklist.push(userId);
+            saveData();
+            renderAdminTable();
+            updateStats();
+            alert(`User ${userId} has been banned!`);
+            document.getElementById('banUserId').value = '';
+        } else {
+            alert('User already banned!');
+        }
+    });
+    
+    // ========== API ENDPOINT untuk Script ==========
+    // Fungsi ini akan dijalankan kalo ada request ke website dengan parameter
+    function handleApiRequest() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let action = urlParams.get('action');
+        let userId = urlParams.get('userId');
+        let key = urlParams.get('key');
+        
+        if (action === 'validate' && userId && key) {
+            let result = validateKey(userId, key);
+            let response = {
+                valid: result.valid,
+                reason: result.reason,
+                expiredAt: result.expiredAt
+            };
+            
+            // Tampilkan response di console untuk debugging
+            console.log('API Response:', response);
+            
+            // Simulate API response - di real implementation ini akan return JSON
+            document.body.innerHTML = JSON.stringify(response);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // Check if this is an API request
+    if (handleApiRequest()) {
+        // Stop execution for API requests
+    }
+    
+    // Tab switching
+    let tabBtns = document.querySelectorAll('.tab-btn');
+    let tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            let tabId = btn.getAttribute('data-tab');
+            
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
         });
-    </script>
+    });
+    
+    // Auto update online status (simulasi)
+    setInterval(() => {
+        if (isAdminLoggedIn) {
+            renderAdminTable();
+            updateStats();
+        }
+    }, 10000);
+</script>
+
 </body>
-</html>
+    </html>
