@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BYOKUXMON - Map Manager Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #e8e8f0;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: #0f0f18;
+            padding: 20px 30px;
+            border-bottom: 3px solid #cc0000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: #ff3333;
+            letter-spacing: 2px;
+        }
+
+        .logo p {
+            font-size: 11px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        .status-badge {
+            background: #1a1a2a;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 12px;
+            border-left: 3px solid #22c55e;
+        }
+
+        /* ========== CONTAINER ========== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+
+        /* ========== TOOLBAR ========== */
+        .toolbar {
+            background: #12121e;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-area {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            background: #0a0a12;
+            border: 1px solid #2a1a2a;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-family: monospace;
+            flex: 1;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #cc0000;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter {
+            background: #1a1a2a;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            color: #aaa;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.2s;
+        }
+
+        .btn-filter.active {
+            background: #cc0000;
+            color: white;
+        }
+
+        .btn-filter:hover {
+            background: #2a2a3a;
+        }
+
+        .btn-primary {
+            background: #cc0000;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: monospace;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #ff2222;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #1a1a2a;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            color: #ddd;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .btn-secondary:hover {
+            background: #2a2a3a;
+        }
+
+        .btn-danger {
+            background: #3a0000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: #ff6666;
+            cursor: pointer;
+        }
+
+        .btn-danger:hover {
+            background: #5a0000;
+        }
+
+        /* ========== STATS ========== */
+        .stats {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            color: #888;
+            font-size: 13px;
+            border-bottom: 1px solid #1a1a2a;
+        }
+
+        /* ========== MAP CARD ========== */
+        .map-card {
+            background: #12121e;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            transition: all 0.2s;
+            border: 1px solid #1a1a2a;
+        }
+
+        .map-card:hover {
+            background: #161626;
+            border-color: #2a1a2a;
+        }
+
+        .map-card.locked {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .map-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 2;
+            flex-wrap: wrap;
+        }
+
+        .map-number {
+            color: #666;
+            font-size: 14px;
+            min-width: 35px;
+        }
+
+        .map-name {
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 180px;
+        }
+
+        .map-name.locked {
+            color: #f59e0b;
+        }
+
+        .map-file {
+            color: #888;
+            font-size: 12px;
+            font-family: monospace;
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .status {
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .status-unlocked {
+            background: #064e3b;
+            color: #22c55e;
+        }
+
+        .status-locked {
+            background: #451a03;
+            color: #f59e0b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.15);
+        }
+
+        /* ========== PAGINATION ========== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            background: #1a1a2a;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            color: #ddd;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .page-btn.active {
+            background: #cc0000;
+            color: white;
+        }
+
+        .page-btn:hover:not(.active) {
+            background: #2a2a3a;
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #12121e;
+            border-radius: 16px;
+            width: 500px;
+            max-width: 90%;
+            border-top: 4px solid #cc0000;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #2a1a2a;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid #2a1a2a;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: #0a0a12;
+            border: 1px solid #2a1a2a;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-family: monospace;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #cc0000;
+        }
+
+        .dropzone {
+            border: 2px dashed #2a1a2a;
+            border-radius: 12px;
+            padding: 35px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dropzone:hover {
+            border-color: #cc0000;
+            background: #1a0a0a;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #22c55e;
+        }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a1a2a;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border-left: 4px solid #22c55e;
+            animation: slideIn 0.3s ease;
+            z-index: 1001;
+            font-size: 14px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 800px) {
+            .container {
+                padding: 15px;
+            }
+            .map-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .toolbar {
+                flex-direction: column;
+            }
+            .search-area {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo">
+        <h1>⚡ BYOKUXMON</h1>
+        <p>// MAP MANAGER v3.0</p>
+    </div>
+    <div class="status-badge" id="statusBadge">
+        🟢 Ready | Local Storage
+    </div>
+</div>
+
+<div class="container">
+    <div class="toolbar">
+        <div class="search-area">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Cari map...">
+        </div>
+        <div class="filter-group">
+            <button class="btn-filter active" data-filter="all">📋 Semua</button>
+            <button class="btn-filter" data-filter="unlocked">🔓 Unlocked</button>
+            <button class="btn-filter" data-filter="locked">🔒 Locked</button>
+        </div>
+        <div>
+            <button class="btn-primary" id="addMapBtn">＋ Tambah Map</button>
+            <button class="btn-secondary" id="cleanupBtn" style="margin-left: 8px;">🗑 Cleanup</button>
+        </div>
+    </div>
+
+    <div class="stats" id="stats">
+        📊 Memuat data...
+    </div>
+
+    <div id="mapList">
+        <!-- Map cards akan muncul di sini -->
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- MODAL TAMBAH/EDIT MAP -->
+<div class="modal" id="mapModal">
+    <div class="modal-content">
+        <div class="modal-header" id="modalTitle">Tambah Map Baru</div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>📛 Nama Map</label>
+                <input type="text" id="mapName" placeholder="Contoh: Deathrun Extreme">
+            </div>
+            <div class="form-group">
+                <label>📄 Nama File (.json)</label>
+                <input type="text" id="mapFile" placeholder="Contoh: deathrun_extreme.json">
+            </div>
+            <div class="form-group">
+                <label>📦 Upload ZIP (Opsional)</label>
+                <div class="dropzone" id="dropzone">
+                    📦 Drag & Drop file .zip di sini<br>
+                    <small>atau klik untuk browse</small>
+                </div>
+                <div class="file-info" id="fileInfo"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelModalBtn">Batal</button>
+            <button class="btn-primary" id="saveMapBtn">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CLEANUP -->
+<div class="modal" id="cleanupModal">
+    <div class="modal-content">
+        <div class="modal-header">🗑 Cleanup File Orphaned</div>
+        <div class="modal-body">
+            <p>File JSON berikut tidak terdaftar di database:</p>
+            <div id="orphanedList" style="margin-top: 15px; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancelCleanupBtn">Batal</button>
+            <button class="btn-danger" id="confirmCleanupBtn">Hapus</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== DATA ====================
+    let mapsData = [];
+    let currentFilter = 'all';
+    let currentPage = 1;
+    const itemsPerPage = 8;
+    let editIndex = -1;
+    let selectedZipFile = null;
+
+    // ==================== LOAD & SAVE ====================
+    function loadData() {
+        const saved = localStorage.getItem('byokuxmon_maps');
+        if (saved) {
+            mapsData = JSON.parse(saved);
+        } else {
+            // Data default
+            mapsData = [
+                { name: "Deathrun Paradise", url: "deathrun_paradise.json", locked: false },
+                { name: "Bhop Elite", url: "bhop_elite.json", locked: true },
+                { name: "Survival Island", url: "survival_island.json", locked: false },
+                { name: "Parkour Master", url: "parkour_master.json", locked: true },
+                { name: "Zombie Escape", url: "zombie_escape.json", locked: false },
+                { name: "Slide Race", url: "slide_race.json", locked: false },
+                { name: "Climb Challenge", url: "climb_challenge.json", locked: true },
+                { name: "Hide and Seek", url: "hide_seek.json", locked: false }
+            ];
+            saveData();
+        }
+        renderAll();
+    }
+
+    function saveData() {
+        localStorage.setItem('byokuxmon_maps', JSON.stringify(mapsData));
+    }
+
+    // ==================== FILTER & SEARCH ====================
+    function getFilteredMaps() {
+        let filtered = [...mapsData];
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        
+        if (searchTerm) {
+            filtered = filtered.filter(m => 
+                m.name.toLowerCase().includes(searchTerm) || 
+                m.url.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        if (currentFilter === 'unlocked') {
+            filtered = filtered.filter(m => !m.locked);
+        } else if (currentFilter === 'locked') {
+            filtered = filtered.filter(m => m.locked);
+        }
+        
+        return filtered;
+    }
+
+    // ==================== RENDER ====================
+    function renderAll() {
+        renderStats();
+        renderMapList();
+        renderPagination();
+    }
+
+    function renderStats() {
+        const filtered = getFilteredMaps();
+        const total = filtered.length;
+        const start = (currentPage - 1) * itemsPerPage + 1;
+        const end = Math.min(start + itemsPerPage - 1, total);
+        const pages = Math.ceil(total / itemsPerPage);
+        
+        document.getElementById('stats').innerHTML = 
+            `📊 Menampilkan ${total > 0 ? start : 0}-${end} dari ${total} map | Halaman ${currentPage}/${pages || 1}`;
+    }
+
+    function renderMapList() {
+        const filtered = getFilteredMaps();
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        
+        if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+        
+        const start = (currentPage - 1) * itemsPerPage;
+        const pageMaps = filtered.slice(start, start + itemsPerPage);
+        const container = document.getElementById('mapList');
+        
+        if (pageMaps.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 60px; color: #666;">🎯 Tidak ada map yang ditemukan</div>';
+            return;
+        }
+        
+        container.innerHTML = pageMaps.map((map, idx) => {
+            const realIndex = mapsData.findIndex(m => m.name === map.name && m.url === map.url);
+            const displayNum = start + idx + 1;
+            return `
+                <div class="map-card ${map.locked ? 'locked' : ''}">
+                    <div class="map-info">
+                        <div class="map-number">#${displayNum}</div>
+                        <div class="map-name ${map.locked ? 'locked' : ''}">${escapeHtml(map.name)}</div>
+                        <div class="map-file">📄 ${escapeHtml(map.url)}</div>
+                        <div class="status ${map.locked ? 'status-locked' : 'status-unlocked'}">
+                            ${map.locked ? '🔒 LOCKED' : '🔓 UNLOCKED'}
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="toggleLock(${realIndex})" title="Lock/Unlock">${map.locked ? '🔓' : '🔒'}</button>
+                        <button class="action-btn" onclick="editMap(${realIndex})" title="Edit">✏️</button>
+                        <button class="action-btn" onclick="deleteMap(${realIndex})" title="Delete">🗑️</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderPagination() {
+        const filtered = getFilteredMaps();
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        
+        if (totalPages <= 1) {
+            document.getElementById('pagination').innerHTML = '';
+            return;
+        }
+        
+        let html = '';
+        html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled style="opacity:0.5"' : ''}>◀ Prev</button>`;
+        
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+        
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        }
+        
+        html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled style="opacity:0.5"' : ''}>Next ▶</button>`;
+        
+        document.getElementById('pagination').innerHTML = html;
+    }
+
+    function goToPage(page) {
+        const filtered = getFilteredMaps();
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        if (page >= 1 && page <= totalPages) {
+            currentPage = page;
+            renderAll();
+        }
+    }
+
+    // ==================== ACTIONS ====================
+    function toggleLock(index) {
+        mapsData[index].locked = !mapsData[index].locked;
+        saveData();
+        renderAll();
+        showToast(`${mapsData[index].name} ${mapsData[index].locked ? '🔒 dikunci' : '🔓 dibuka'}`);
+    }
+
+    function deleteMap(index) {
+        if (confirm(`⚠️ Yakin ingin menghapus map:\n\n  "${mapsData[index].name}"\n\nData akan hilang permanen!`)) {
+            const name = mapsData[index].name;
+            mapsData.splice(index, 1);
+            saveData();
+            renderAll();
+            showToast(`🗑️ "${name}" berhasil dihapus`);
+        }
+    }
+
+    function editMap(index) {
+        editIndex = index;
+        const map = mapsData[index];
+        document.getElementById('mapName').value = map.name;
+        document.getElementById('mapFile').value = map.url;
+        document.getElementById('modalTitle').innerHTML = '✏️ Edit Map';
+        document.getElementById('mapModal').classList.add('active');
+    }
+
+    function saveMap() {
+        const name = document.getElementById('mapName').value.trim();
+        let file = document.getElementById('mapFile').value.trim();
+        
+        if (!name) {
+            showToast('Nama map tidak boleh kosong!', true);
+            return;
+        }
+        
+        if (!file) {
+            showToast('Nama file tidak boleh kosong!', true);
+            return;
+        }
+        
+        if (!file.endsWith('.json')) file += '.json';
+        
+        if (editIndex === -1) {
+            mapsData.push({ name, url: file, locked: false });
+            showToast(`✅ "${name}" berhasil ditambahkan`);
+        } else {
+            mapsData[editIndex] = { ...mapsData[editIndex], name, url: file };
+            showToast(`✅ "${name}" berhasil diupdate`);
+        }
+        
+        saveData();
+        document.getElementById('mapModal').classList.remove('active');
+        currentPage = 1;
+        renderAll();
+        clearModalForm();
+    }
+
+    function clearModalForm() {
+        document.getElementById('mapName').value = '';
+        document.getElementById('mapFile').value = '';
+        document.getElementById('fileInfo').innerHTML = '';
+        selectedZipFile = null;
+        editIndex = -1;
+    }
+
+    // ==================== CLEANUP ====================
+    function getOrphanedFiles() {
+        const trackedFiles = mapsData.map(m => m.url);
+        const allFiles = getAllMockFiles();
+        return allFiles.filter(f => !trackedFiles.includes(f));
+    }
+
+    function getAllMockFiles() {
+        let orphaned = localStorage.getItem('byokuxmon_orphaned');
+        if (orphaned) return JSON.parse(orphaned);
+        
+        const defaultOrphaned = ['old_abandoned.json', 'test_debug.json', 'backup_2023.json', 'temp_map.json'];
+        localStorage.setItem('byokuxmon_orphaned', JSON.stringify(defaultOrphaned));
+        return defaultOrphaned;
+    }
+
+    function openCleanupModal() {
+        const orphaned = getOrphanedFiles();
+        
+        if (orphaned.length === 0) {
+            showToast('✨ Tidak ada file orphaned! Semua file sudah terdaftar.');
+            return;
+        }
+        
+        document.getElementById('orphanedList').innerHTML = orphaned.map(f => `
+            <div style="padding: 10px; margin: 6px 0; background: #1a1a2a; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" class="orphaned-checkbox" value="${escapeHtml(f)}" checked style="width: 18px; height: 18px;">
+                <span style="font-family: monospace;">📄 ${escapeHtml(f)}</span>
+            </div>
+        `).join('');
+        
+        document.getElementById('cleanupModal').classList.add('active');
+    }
+
+    function confirmCleanup() {
+        const checkboxes = document.querySelectorAll('.orphaned-checkbox:checked');
+        const toDelete = Array.from(checkboxes).map(cb => cb.value);
+        
+        if (toDelete.length === 0) {
+            showToast('Tidak ada file yang dipilih', true);
+            return;
+        }
+        
+        let currentOrphaned = getAllMockFiles();
+        currentOrphaned = currentOrphaned.filter(f => !toDelete.includes(f));
+        localStorage.setItem('byokuxmon_orphaned', JSON.stringify(currentOrphaned));
+        
+        showToast(`🗑️ ${toDelete.length} file orphaned berhasil dihapus`);
+        document.getElementById('cleanupModal').classList.remove('active');
+    }
+
+    // ==================== DRAG & DROP ZIP ====================
+    function setupDragDrop() {
+        const dropzone = document.getElementById('dropzone');
+        if (!dropzone) return;
+        
+        dropzone.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.zip';
+            input.onchange = (e) => handleZipFile(e.target.files[0]);
+            input.click();
+        });
+        
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#cc0000';
+            dropzone.style.background = '#1a0a0a';
+        });
+        
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.borderColor = '#2a1a2a';
+            dropzone.style.background = 'transparent';
+        });
+        
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#2a1a2a';
+            dropzone.style.background = 'transparent';
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.zip')) {
+                handleZipFile(file);
+            } else {
+                showToast('❌ Hanya file .zip yang diterima!', true);
+            }
+        });
+    }
+    
+    function handleZipFile(file) {
+        if (!file || !file.name.endsWith('.zip')) {
+            showToast('❌ Hanya file .zip yang diterima!', true);
+            return;
+        }
+        
+        selectedZipFile = file;
+        const jsonName = file.name.replace('.zip', '.json');
+        document.getElementById('mapFile').value = jsonName;
+        document.getElementById('fileInfo').innerHTML = `✅ ${file.name} (${(file.size / 1024).toFixed(2)} KB) - JSON: ${jsonName}`;
+        showToast(`📦 ZIP diterima! File JSON: ${jsonName}`);
+    }
+
+    // ==================== UTILS ====================
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function showToast(message, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.borderLeftColor = isError ? '#ef4444' : '#22c55e';
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    function initEventListeners() {
+        document.getElementById('addMapBtn').onclick = () => {
+            clearModalForm();
+            document.getElementById('modalTitle').innerHTML = '＋ Tambah Map Baru';
+            document.getElementById('mapModal').classList.add('active');
+        };
+        
+        document.getElementById('cleanupBtn').onclick = openCleanupModal;
+        document.getElementById('cancelModalBtn').onclick = () => document.getElementById('mapModal').classList.remove('active');
+        document.getElementById('cancelCleanupBtn').onclick = () => document.getElementById('cleanupModal').classList.remove('active');
+        document.getElementById('saveMapBtn').onclick = saveMap;
+        document.getElementById('confirmCleanupBtn').onclick = confirmCleanup;
+        
+        document.getElementById('searchInput').addEventListener('input', () => {
+            currentPage = 1;
+            renderAll();
+        });
+        
+        document.querySelectorAll('.btn-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                currentPage = 1;
+                renderAll();
+            });
+        });
+        
+        // Close modal with ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('mapModal').classList.remove('active');
+                document.getElementById('cleanupModal').classList.remove('active');
+            }
+        });
+    }
+
+    // ==================== START ====================
+    loadData();
+    initEventListeners();
+    setupDragDrop();
+</script>
+
+</body>
+</html>
