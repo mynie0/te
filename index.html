@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByokuXMon - Record & Playback System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0b0b 100%);
+            color: #fcfcfc;
+            min-height: 100vh;
+        }
+
+        /* ========== THEME NATIVE RED ========== */
+        :root {
+            --primary: #ff5e5e;
+            --primary-dark: #cc3a3a;
+            --primary-light: #ff8888;
+            --bg-dark: #0a0505;
+            --bg-card: #1a0b0b;
+            --bg-elevated: #2b1212;
+            --text: #fcfcfc;
+            --text-muted: #cc8888;
+            --border: #451a1a;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-card);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 16px 0;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .logo i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .logo span {
+            color: var(--text);
+        }
+
+        .logo .highlight {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 94, 94, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 94, 94, 0.15);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+
+        /* Stats */
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Section */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+            margin-right: 12px;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(26, 11, 11, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+
+        /* Generator */
+        .generator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .input-group label i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        select.input {
+            cursor: pointer;
+        }
+
+        .loadstring-box {
+            background: var(--bg-dark);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .loadstring-code {
+            background: #0a0505;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            max-height: 150px;
+            overflow: auto;
+        }
+
+        /* Mount Grid */
+        .mounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .mount-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .mount-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .mount-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .mount-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .mount-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .mount-download {
+            width: 100%;
+            margin-top: 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .mount-download:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Steps */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0 auto 16px;
+            color: var(--bg-dark);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 94, 94, 0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .feature-icon i {
+            font-size: 32px;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .social-links a {
+            color: var(--text-muted);
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            .generator-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero-stats {
+                gap: 24px;
+            }
+            .section-title {
+                font-size: 28px;
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-elevated);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border-left: 3px solid var(--primary);
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-mountain"></i>
+                    <span>Byoku<span class="highlight">XMon</span></span>
+                </div>
+                <div class="nav-links">
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#generator" class="nav-link">Generator</a>
+                    <a href="#mounts" class="nav-link">Mounts</a>
+                    <a href="#guide" class="nav-link">Guide</a>
+                    <a href="#features" class="nav-link">Features</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-circle-dot"></i> Version 2.1.0
+                </div>
+                <h1 class="hero-title">
+                    Record & <span class="gradient-text">Playback</span> System
+                </h1>
+                <p class="hero-desc">
+                    Rekam gerakan, simpan sebagai MOUNT, mainkan dengan Flip Mode, Reverse Mode, Auto Loop, dan banyak lagi!
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="quickCopy">
+                        <i class="fas fa-copy"></i> Copy Loadstring
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('generator').scrollIntoView({behavior: 'smooth'})">
+                        <i class="fas fa-wand-magic"></i> Custom Generator
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="mountCount">0</div>
+                        <div class="stat-label">Total Mounts</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">40+</div>
+                        <div class="stat-label">Animations</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Playback Modes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="generator" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i> Custom Loadstring Generator
+                </h2>
+                <p class="section-desc">Generate loadstring khusus dengan theme favoritmu</p>
+            </div>
+
+            <div class="card">
+                <div class="generator-grid">
+                    <div>
+                        <div class="input-group">
+                            <label><i class="fas fa-user"></i> Roblox User ID</label>
+                            <input type="text" id="userId" placeholder="Contoh: 1234567890" class="input">
+                            <small style="color: var(--text-muted);">Cek di URL profil Roblox mu</small>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-palette"></i> Theme</label>
+                            <select id="theme" class="input">
+                                <option value="Native Red">🔥 Native Red (Default)</option>
+                                <option value="Dark Blue">💙 Dark Blue</option>
+                                <option value="Neon Green">💚 Neon Green</option>
+                                <option value="Purple Haze">💜 Purple Haze</option>
+                                <option value="Golden">👑 Golden Empire</option>
+                                <option value="Cyberpunk">💗 Cyberpunk Pink</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="loadstring-box">
+                        <div class="loadstring-code" id="loadstringDisplay">
+                            -- Pilih User ID dan Theme dulu
+                        </div>
+                        <button class="btn btn-primary" id="generateBtn" style="width: 100%;">
+                            <i class="fas fa-sync"></i> Generate Loadstring
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mounts" class="section" style="background: rgba(255, 94, 94, 0.02);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-mountain"></i> Community Mounts
+                </h2>
+                <p class="section-desc">Download mount hasil karya user lain</p>
+            </div>
+            <div class="mounts-grid" id="mountsGrid">
+                <div class="mount-card">
+                    <div class="mount-header">
+                        <span class="mount-name">Velora</span>
+                        <i class="fas fa-crown" style="color: #ffd700;"></i>
+                    </div>
+                    <div class="mount-stats">
+                        <span><i class="fas fa-film"></i> 1,234 frames</span>
+                        <span><i class="fas fa-user"></i> ByokuXMon</span>
+                    </div>
+                    <button class="btn mount-download">
+                        <i class="fas fa-download"></i> Download Mount
+                    </button>
+                </div>
+                <div class="mount-card">
+                    <div class="mount-header">
+                        <span class="mount-name">Heaven</span>
+                    </div>
+                    <div class="mount-stats">
+                        <span><i class="fas fa-film"></i> 856 frames</span>
+                        <span><i class="fas fa-user"></i> User123</span>
+                    </div>
+                    <button class="btn mount-download">
+                        <i class="fas fa-download"></i> Download Mount
+                    </button>
+                </div>
+                <div class="mount-card">
+                    <div class="mount-header">
+                        <span class="mount-name">ShadowDash</span>
+                    </div>
+                    <div class="mount-stats">
+                        <span><i class="fas fa-film"></i> 2,341 frames</span>
+                        <span><i class="fas fa-user"></i> ProPlayer</span>
+                    </div>
+                    <button class="btn mount-download">
+                        <i class="fas fa-download"></i> Download Mount
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="guide" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-book-open"></i> Panduan Lengkap
+                </h2>
+                <p class="section-desc">Cara pake script ByokuXMon Record & Playback System</p>
+            </div>
+
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Copy Loadstring</h3>
+                    <p style="color: var(--text-muted);">Copy loadstring dari generator atau klik tombol copy di atas</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Execute di Executor</h3>
+                    <p style="color: var(--text-muted);">Paste di executor favoritmu (Synapse, Krnl, etc) lalu execute</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Buka Menu</h3>
+                    <p style="color: var(--text-muted);">Tekan tombol "Open Menu" yang muncul di layar</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Start Recording!</h3>
+                    <p style="color: var(--text-muted);">Klik Show Recording UI, lalu REC untuk mulai merekam</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section" style="background: rgba(255, 94, 94, 0.02);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i> Fitur Unggulan
+                </h2>
+                <p class="section-desc">Semua fitur yang tersedia di script ByokuXMon</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-circle-dot"></i>
+                    </div>
+                    <h3>Record System</h3>
+                    <p style="color: var(--text-muted);">Rekam gerakan dengan akurat, support tool dan jump detection</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <h3>Playback Modes</h3>
+                    <p style="color: var(--text-muted);">Normal, Flip Mode (hadap belakang), Reverse Mode (mundur)</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Merge System</h3>
+                    <p style="color: var(--text-muted);">Gabungkan beberapa replay jadi satu MOUNT keren</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <h3>Animation Pack</h3>
+                    <p style="color: var(--text-muted);">40+ animation pack siap pakai (Vampire, Hero, Ninja, dll)</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <h3>Copy Avatar</h3>
+                    <p style="color: var(--text-muted);">Copy avatar player online/offline, auto apply setelah respawn</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Protection</h3>
+                    <p style="color: var(--text-muted);">Noclip, God Mode, Anti AFK, Bypass Admin Detection</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p style="color: var(--text-muted);">© 2026 ByokuXMon - Record & Playback System</p>
+            <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">Discord: discord.gg/GyM9ZSdXh</p>
+        </div>
+    </footer>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+        <span id="notifMessage">Copied!</span>
+    </div>
+
+    <script>
+        // Show notification
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notifMessage').textContent = message;
+            notif.classList.add('show');
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 2000);
+        }
+
+        // Copy text
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            showNotification('Loadstring copied!');
+        }
+
+        // Generate loadstring
+        function generateLoadstring(userId, theme) {
+            if (!userId || userId === '') {
+                return `-- Masukkan User ID dulu bang!
+-- Klik di box input User ID di atas`;
+            }
+            return `loadstring(game:HttpGet("https://raw.githubusercontent.com/ByokuXMon/RecordPlayback/main/main.lua"))()\n-- User ID: ${userId}\n-- Theme: ${theme}\n-- Happy Recording!`;
+        }
+
+        // Quick copy
+        document.getElementById('quickCopy').addEventListener('click', () => {
+            const defaultLoadstring = `loadstring(game:HttpGet("https://raw.githubusercontent.com/ByokuXMon/RecordPlayback/main/main.lua"))()`;
+            copyToClipboard(defaultLoadstring);
+        });
+
+        // Generate button
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const userId = document.getElementById('userId').value;
+            const theme = document.getElementById('theme').value;
+            const loadstring = generateLoadstring(userId, theme);
+            document.getElementById('loadstringDisplay').textContent = loadstring;
+            copyToClipboard(loadstring);
+        });
+
+        // Mount count
+        document.getElementById('mountCount').textContent = '150+';
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.getAttribute('href');
+                if (target && target !== '#') {
+                    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+                }
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
