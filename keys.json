@@ -7,5 +7,14 @@
     "expiresAt": "2026-04-28T18:41:01.929Z",
     "renewCount": 0,
     "lastRenewedAt": null
+  },
+  {
+    "key": "7C79EF728023ED58A20702EF101F39D2",
+    "username": "ox_seiju",
+    "duration": "1",
+    "createdAt": "2026-04-28T17:42:34.808Z",
+    "expiresAt": "2026-04-28T18:42:34.680Z",
+    "renewCount": 0,
+    "lastRenewedAt": null
   }
 ]
