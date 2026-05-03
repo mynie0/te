@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>RobloxScriptHub | Admin Panel + Images</title>
+<title>RobloxScriptHub | Admin Panel + Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -100,6 +100,7 @@
   .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,16,0.94); backdrop-filter: blur(8px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--bg2); border: 1px solid var(--neon-cyan); border-radius: 16px; width: 100%; max-width: 850px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,245,255,0.3); }
+  .modal-sm { max-width: 400px; }
   .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(0,245,255,0.3); }
   .modal-title { font-family: 'Orbitron', monospace; font-size: 0.9rem; color: var(--neon-cyan); }
   .modal-close { background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
@@ -121,6 +122,7 @@
   .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
   .admin-badge { background: #ff2d7822; border: 1px solid #ff2d78; border-radius: 20px; padding: 5px 12px; font-size: 0.7rem; color: var(--neon-pink); }
   .script-list-item { background: #0a0a1a; margin-bottom: 10px; padding: 12px; border-radius: 10px; border-left: 3px solid #ff2d78; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .login-error { color: #ff2d78; font-size: 0.75rem; margin-top: 8px; text-align: center; }
   footer { margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--border); text-align: center; font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--muted); }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -132,7 +134,7 @@
   <header>
     <div class="header-inner">
       <div><div class="logo"><span>Roblox</span><span>Script</span><span>Hub</span></div><div class="logo-sub">FREE SCRIPTS · KEYLESS · IMAGE SUPPORT</div></div>
-      <button class="admin-btn" id="adminButton">🔧 ADMIN PANEL</button>
+      <button class="admin-btn" id="adminButton">🔐 ADMIN LOGIN</button>
     </div>
   </header>
   <div class="search-wrap"><span class="search-icon">🔍</span><input id="searchInput" type="text" placeholder="Search script or game..."/></div>
@@ -142,17 +144,20 @@
     <button class="tab" data-filter="keyless">KEYLESS</button>
     <button class="tab" data-filter="paid">PAID</button>
   </div>
-  <div class="stats"><div class="stat">Scripts: <b id="countAll">0</b></div><div class="stat">Shown: <b id="countShown">0</b></div></div>
+  <div class="stats"><div class="stat">Scripts: <b id="countAll">0</b></div><div class="stat">Shown: <b id="countShown">0</b></div><div class="stat" id="adminStatus">Mode: <b>USER</b></div></div>
   <div class="grid" id="scriptGrid"></div>
 </div>
-<footer><div class="container"><span>RobloxScriptHub</span> — Educational only | Admin Panel by button</div></footer>
+<footer><div class="container"><span>RobloxScriptHub</span> — Educational only | Admin password: admin123</div></footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal"><div class="modal modal-sm"><div class="modal-header"><div class="modal-title">🔐 ADMIN LOGIN</div><button class="modal-close" id="loginModalClose">✕</button></div><div class="modal-body"><div class="admin-form-group"><label>PASSWORD</label><input type="password" id="adminPassword" placeholder="Enter admin password" autocomplete="off"></div><div id="loginError" class="login-error"></div><div style="display: flex; gap: 12px; margin-top: 20px;"><button id="loginSubmitBtn" class="btn btn-success" style="flex:1;">LOGIN</button><button id="loginCancelBtn" class="btn btn-raw" style="flex:1;">CANCEL</button></div></div></div></div>
 
 <!-- RAW MODAL -->
 <div class="modal-overlay" id="rawModal"><div class="modal"><div class="modal-header"><div class="modal-title" id="modalTitle">RAW SCRIPT</div><button class="modal-close" id="modalClose">✕</button></div><div class="modal-body"><pre id="modalContent"></pre></div><div class="modal-footer"><button class="btn btn-copy" id="modalCopyBtn" style="flex:none;">COPY</button><button class="btn btn-raw" style="flex:none;" id="modalCloseBtn">CLOSE</button></div></div></div>
 
-<!-- ADMIN PANEL MODAL -->
+<!-- ADMIN PANEL MODAL (hanya muncul jika sudah login) -->
 <div class="modal-overlay" id="adminModal"><div class="modal"><div class="modal-header"><div class="modal-title">🛠️ ADMIN CONTROL PANEL | Manage Scripts + Images</div><button class="modal-close" id="adminModalClose">✕</button></div><div class="modal-body" id="adminModalBody">
-  <div class="admin-header"><div class="admin-badge">🔐 Full CRUD + Image URL</div><button id="newScriptBtn" class="btn btn-success" style="flex:none; padding:6px 18px;">+ NEW SCRIPT</button></div>
+  <div class="admin-header"><div class="admin-badge">🔐 Full CRUD + Image URL</div><button id="newScriptBtn" class="btn btn-success" style="flex:none; padding:6px 18px;">+ NEW SCRIPT</button><button id="logoutBtn" class="btn btn-danger" style="flex:none; padding:6px 18px;">🚪 LOGOUT</button></div>
   <div id="adminScriptsList" style="margin-bottom: 30px;"></div>
   <hr style="border-color:rgba(0,245,255,0.2); margin: 20px 0;">
   <h3 style="font-family:Orbitron;font-size:0.8rem;color:#00f5ff;">📝 Edit / Create Script</h3>
@@ -162,24 +167,292 @@
     <div class="admin-form-group"><label>DESCRIPTION</label><textarea id="formDesc" rows="2" placeholder="Auto play obby dengan portal teleportation..."></textarea></div>
     <div class="admin-row"><div class="admin-form-group"><label>TAG</label><select id="formTag"><option value="free">FREE</option><option value="keyless">KEYLESS</option><option value="paid">PAID</option></select></div>
     <div class="admin-form-group"><label>FEATURES (comma)</label><input type="text" id="formFeatures" placeholder="Auto Portal, Pickup Collect, Anti-AFK"></div></div>
-    <div class="admin-form-group"><label>🎨 IMAGE URL (opsional)</label><input type="text" id="formImage" placeholder="https://example.com/thumbnail.jpg"></div>
+    <div class="admin-form-group"><label>🎨 IMAGE URL (opsional - GitHub raw URL)</label><input type="text" id="formImage" placeholder="https://raw.githubusercontent.com/username/image.png"></div>
     <div class="admin-form-group"><label>LUA SCRIPT CODE *</label><textarea id="formCode" rows="10" placeholder="-- paste your script here..."></textarea></div>
     <div style="display: flex; gap: 12px; margin-top: 15px;"><button type="submit" class="btn btn-success" style="flex:1;">💾 SAVE / UPDATE</button><button type="button" id="cancelFormBtn" class="btn btn-raw" style="flex:1;">CANCEL</button></div>
   </form>
 </div></div></div>
 
 <script>
-  // ========== DEFAULT SCRIPTS (dengan image contoh) ==========
+  // ========== SCRIPT DEFAULT (TIDAK DIUBAH) ==========
   const defaultScripts = [
-    { title: "Wonder Chase V3", game: "WONDER CHASE OBBY", desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.", tag: "free", features: ["Auto Portal","Pickup Collect","Anti-AFK","Auto Replay"], image: "https://placehold.co/400x200/0d0d2b/00f5ff?text=Wonder+Chase", code: `-- Wonder Chase V3 | RobloxScriptHub\nlocal Players = game:GetService("Players")\nlocal VirtualUser = game:GetService("VirtualUser")\nlocal lp = Players.LocalPlayer\nlp.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame) task.wait(1) VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame) end)\nprint("[WonderChase] Loaded")` },
-    { title: "Orb Collector ESP", game: "ANY GAME (ORB)", desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.", tag: "keyless", features: ["Auto Collect","ESP RGB","FPS Boost"], image: "https://placehold.co/400x200/0d0d2b/39ff14?text=Orb+ESP", code: `-- Orb Collector ESP\nlocal RunService = game:GetService("RunService")\ngetgenv().OrbESP = true\nRunService.Heartbeat:Connect(function()\n    for _, obj in pairs(workspace:GetDescendants()) do\n        if obj:IsA("BasePart") and obj.Name:lower():find("orb") then\n            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, obj, 0)\n        end\n    end\nend)` },
-    { title: "Inf Point Clicker", game: "ECLIPSE JOIN & CLAIM", desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan WalkSpeed boost.", tag: "keyless", features: ["Inf Points","WalkSpeed","Toggle"], image: "https://placehold.co/400x200/0d0d2b/ff2d78?text=Inf+Point", code: `-- Inf Point\nlocal RunService = game:GetService("RunService")\ngetgenv().InfPoint = true\nRunService.Heartbeat:Connect(function()\n    if getgenv().InfPoint then\n        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50\n        pcall(function() game:GetService("ReplicatedStorage"):WaitChild("AddPoint"):FireServer() end)\n    end\nend)` },
-    { title: "Anti Lag Ultimate", game: "ALL GAMES", desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog, particle.", tag: "free", features: ["Low Quality","No Shadow","Hide Players"], image: "https://placehold.co/400x200/0d0d2b/bf00ff?text=Anti+Lag", code: `-- Anti Lag\nsettings().Rendering.QualityLevel = 1\ngame:GetService("Lighting").GlobalShadows = false\nprint("AntiLag Applied")` }
+    {
+      title: "Wonder Chase V3",
+      game: "WONDER CHASE OBBY",
+      desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.",
+      tag: "free",
+      features: ["Auto Portal", "Pickup Collect", "Anti-AFK", "Auto Replay"],
+      image: "",
+      code: `-- Wonder Chase V3 | RobloxScriptHub
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local VirtualUser = game:GetService("VirtualUser")
+
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+
+-- Anti AFK
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+end)
+
+-- Auto Portal
+local portalDelay = 120
+getgenv().WonderChase = true
+
+task.spawn(function()
+    while getgenv().WonderChase do
+        for _, portal in pairs(workspace:GetDescendants()) do
+            if portal:IsA("BasePart") and portal.Name:lower():find("portal") then
+                char.HumanoidRootPart.CFrame = portal.CFrame + Vector3.new(0,3,0)
+                task.wait(portalDelay)
+            end
+        end
+        task.wait(1)
+    end
+end)
+
+-- Pickup Collection
+task.spawn(function()
+    while getgenv().WonderChase do
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("BasePart") and (obj.Name:lower():find("sticker") or obj.Name:lower():find("pickup")) then
+                firetouchinterest(char.HumanoidRootPart, obj, 0)
+                task.wait(0.05)
+                firetouchinterest(char.HumanoidRootPart, obj, 1)
+            end
+        end
+        task.wait(0.5)
+    end
+end)
+
+print("[WonderChase V3] Loaded")`
+    },
+    {
+      title: "Orb Collector ESP",
+      game: "ANY GAME (ORB)",
+      desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.",
+      tag: "keyless",
+      features: ["Auto Collect", "ESP RGB", "FPS Boost", "Distance Display"],
+      image: "",
+      code: `-- Orb Collector ESP | RobloxScriptHub
+local cfg = getgenv()
+cfg.OrbESP = true
+cfg.AutoCollect = true
+cfg.FPSBoost = true
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+if cfg.FPSBoost then
+    settings().Rendering.QualityLevel = 1
+    game:GetService("Lighting").GlobalShadows = false
+    game:GetService("Lighting").FogEnd = 9e9
+end
+
+local function addESP(part)
+    if part:FindFirstChild("OrbESP") then return end
+    local bb = Instance.new("BillboardGui")
+    bb.Name = "OrbESP"
+    bb.AlwaysOnTop = true
+    bb.Size = UDim2.new(0,60,0,20)
+    bb.StudsOffset = Vector3.new(0,2,0)
+    bb.Parent = part
+    local lbl = Instance.new("TextLabel", bb)
+    lbl.Size = UDim2.new(1,0,1,0)
+    lbl.BackgroundTransparency = 1
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextSize = 13
+    lbl.TextStrokeTransparency = 0
+    local hue = 0
+    RunService.Heartbeat:Connect(function()
+        hue = (hue + 0.005) % 1
+        local c = Color3.fromHSV(hue,1,1)
+        lbl.TextColor3 = c
+        local dist = math.floor((hrp.Position - part.Position).Magnitude)
+        lbl.Text = "ORB ["..dist.."m]"
+    end)
+end
+
+RunService.Heartbeat:Connect(function()
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and (obj.Name == "orbs" or obj.Name == "AnaRenk") then
+            if cfg.OrbESP then addESP(obj) end
+            if cfg.AutoCollect then
+                firetouchinterest(hrp, obj, 0)
+                firetouchinterest(hrp, obj, 1)
+            end
+        end
+    end
+end)
+
+print("[OrbCollector] Loaded")`
+    },
+    {
+      title: "Checkpoint Farmer",
+      game: "BADGE / OBBY GAME",
+      desc: "Auto teleport ke semua checkpoint dan farming badge dengan loop otomatis. Support folder ClearStage.",
+      tag: "free",
+      features: ["Auto TP", "Badge Farm", "ClearStage Loop", "Anti-AFK"],
+      image: "",
+      code: `-- Checkpoint Farmer | RobloxScriptHub
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+getgenv().CheckpointFarm = true
+
+local function teleportCheckpoints()
+    for i = 1, 999 do
+        local folder = workspace:FindFirstChild("ClearStage"..i)
+            or (workspace.Engine and workspace.Engine.Checkpoints and workspace.Engine.Checkpoints:FindFirstChild(tostring(i)))
+        if folder then
+            local part = folder:IsA("BasePart") and folder or folder:FindFirstChildWhichIsA("BasePart")
+            if part then
+                hrp.CFrame = part.CFrame + Vector3.new(0,4,0)
+                task.wait(0.3)
+            end
+        end
+    end
+end
+
+task.spawn(function()
+    while getgenv().CheckpointFarm do
+        teleportCheckpoints()
+        task.wait(1)
+    end
+end)
+
+print("[CheckpointFarmer] Running")`
+    },
+    {
+      title: "Inf Point Clicker",
+      game: "ECLIPSE JOIN & CLAIM",
+      desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan set WalkSpeed via RunService Heartbeat.",
+      tag: "keyless",
+      features: ["Inf Points", "WalkSpeed", "Toggle", "Heartbeat Loop"],
+      image: "",
+      code: `-- Inf Point | RobloxScriptHub
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+
+getgenv().InfPoint = true
+local rs = game:GetService("ReplicatedStorage")
+local addPoint = rs:WaitForChild("AddPoint")
+
+RunService.Heartbeat:Connect(function()
+    if not getgenv().InfPoint then return end
+    hum.WalkSpeed = 50
+    pcall(function()
+        addPoint:FireServer()
+    end)
+end)
+
+print("[InfPoint] Active")`
+    },
+    {
+      title: "UGC Auto Claim",
+      game: "EVENT / UGC GAME",
+      desc: "Auto collect UGC item dan fire DJ remote. Support adidas event dan game event sejenis.",
+      tag: "free",
+      features: ["Auto Collect UGC", "Fire Remote", "RequestDJ", "Loop"],
+      image: "",
+      code: `-- UGC Auto Claim | RobloxScriptHub
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local RS = game:GetService("ReplicatedStorage")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+getgenv().UGCClaim = true
+
+-- Fire DJ remote
+task.spawn(function()
+    while getgenv().UGCClaim do
+        pcall(function()
+            RS.Remotes.RequestDJ:FireServer()
+        end)
+        task.wait(0.5)
+    end
+end)
+
+-- Auto collect items
+RunService.Heartbeat:Connect(function()
+    if not getgenv().UGCClaim then return end
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and (obj.Name:lower():find("ugc") or obj.Name:lower():find("item") or obj.Name:lower():find("collect")) then
+            firetouchinterest(hrp, obj, 0)
+            firetouchinterest(hrp, obj, 1)
+        end
+    end
+end)
+
+print("[UGCAutoClaim] Loaded")`
+    },
+    {
+      title: "Anti Lag Ultimate",
+      game: "ALL GAMES",
+      desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog, particle, dan hide player lain.",
+      tag: "free",
+      features: ["Low Quality", "No Shadow", "No Fog", "Hide Players"],
+      image: "",
+      code: `-- Anti Lag Ultimate | RobloxScriptHub
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+
+settings().Rendering.QualityLevel = 1
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 9e9
+Lighting.FogStart = 9e9
+
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
+        v.Enabled = false
+    end
+end
+
+-- Hide other players
+for _, plr in pairs(Players:GetPlayers()) do
+    if plr ~= lp and plr.Character then
+        for _, part in pairs(plr.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.LocalTransparencyModifier = 1
+            end
+        end
+    end
+end
+
+Players.PlayerAdded:Connect(function(plr)
+    plr.CharacterAdded:Connect(function(char)
+        if plr ~= lp then
+            for _, part in pairs(char:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.LocalTransparencyModifier = 1
+                end
+            end
+        end
+    end)
+end)
+
+print("[AntiLag] Applied")`
+    }
   ];
 
   let scriptsDB = [];
   let activeFilter = 'all';
   let searchQuery = '';
+  let isAdminLoggedIn = false;
 
   // Load/Save to localStorage
   function loadData() {
@@ -247,7 +520,7 @@
     document.getElementById('modalCopyBtn').onclick = () => { navigator.clipboard.writeText(s.code); const copyBtn = document.getElementById('modalCopyBtn'); copyBtn.innerText = '✓ COPIED'; setTimeout(()=> copyBtn.innerText = 'COPY', 1600); };
   };
 
-  // Admin functions
+  // Admin functions (hanya bisa diakses jika login)
   function refreshAdminList() {
     const container = document.getElementById('adminScriptsList');
     if(!container) return;
@@ -262,6 +535,7 @@
     });
   }
   window.editScriptByAdmin = function(idx) {
+    if(!isAdminLoggedIn) return;
     const s = scriptsDB[idx];
     document.getElementById('editIndex').value = idx;
     document.getElementById('formTitle').value = s.title;
@@ -274,6 +548,7 @@
     document.getElementById('adminModal').classList.add('open');
   };
   window.deleteScriptByAdmin = function(idx) {
+    if(!isAdminLoggedIn) return;
     if(confirm(`Permanently delete "${scriptsDB[idx].title}"? This cannot be undone.`)) {
       scriptsDB.splice(idx,1);
       saveToLocal();
@@ -292,13 +567,40 @@
     document.getElementById('formCode').value = '';
   }
 
+  // LOGIN Handler
+  function showLoginModal() { document.getElementById('loginModal').classList.add('open'); document.getElementById('adminPassword').value = ''; document.getElementById('loginError').innerText = ''; }
+  function closeLoginModal() { document.getElementById('loginModal').classList.remove('open'); }
+  function doLogin() {
+    const pwd = document.getElementById('adminPassword').value;
+    if(pwd === 'admin123') {
+      isAdminLoggedIn = true;
+      closeLoginModal();
+      document.getElementById('adminStatus').innerHTML = 'Mode: <b style="color:#39ff14;">ADMIN</b>';
+      refreshAdminList();
+      document.getElementById('adminModal').classList.add('open');
+    } else {
+      document.getElementById('loginError').innerText = '❌ Wrong password!';
+    }
+  }
+  function logout() {
+    isAdminLoggedIn = false;
+    document.getElementById('adminStatus').innerHTML = 'Mode: <b>USER</b>';
+    document.getElementById('adminModal').classList.remove('open');
+    alert('Logged out from admin panel.');
+  }
+
   // Event Listeners
-  document.getElementById('adminButton')?.addEventListener('click', () => {
-    refreshAdminList();
-    document.getElementById('adminModal').classList.add('open');
-  });
-  document.getElementById('newScriptBtn')?.addEventListener('click',()=>{ resetAdminForm(); document.getElementById('editIndex').value = -1; document.getElementById('adminModal').classList.add('open'); });
+  document.getElementById('adminButton')?.addEventListener('click', () => { showLoginModal(); });
+  document.getElementById('loginSubmitBtn')?.addEventListener('click', doLogin);
+  document.getElementById('loginCancelBtn')?.addEventListener('click', closeLoginModal);
+  document.getElementById('loginModalClose')?.addEventListener('click', closeLoginModal);
+  document.getElementById('loginModal')?.addEventListener('click', function(e){ if(e.target===this) closeLoginModal(); });
+  document.getElementById('adminPassword')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') doLogin(); });
+  
+  document.getElementById('newScriptBtn')?.addEventListener('click',()=>{ if(isAdminLoggedIn){ resetAdminForm(); document.getElementById('editIndex').value = -1; document.getElementById('adminModal').classList.add('open'); } });
+  document.getElementById('logoutBtn')?.addEventListener('click',()=>{ logout(); });
   document.getElementById('adminForm')?.addEventListener('submit', (e) => {
+    if(!isAdminLoggedIn) return;
     e.preventDefault();
     const idx = parseInt(document.getElementById('editIndex').value);
     const newScript = {
