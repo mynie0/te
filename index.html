@@ -1,795 +1,1075 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>RobloxScriptHub | Professional Admin Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RobloxScriptHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  :root {
+    --bg: #050510;
+    --bg2: #080820;
+    --card: #0d0d2b;
+    --neon-pink: #ff2d78;
+    --neon-cyan: #00f5ff;
+    --neon-green: #39ff14;
+    --neon-purple: #bf00ff;
+    --neon-yellow: #ffe600;
+    --text: #e0e0ff;
+    --muted: #6060aa;
+    --border: rgba(0,245,255,0.15);
   }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #0a0a0f;
-    font-family: 'Inter', sans-serif;
-    color: #e0e0e0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* Premium Glassmorphism Navbar */
-  .navbar {
-    background: rgba(10, 10, 20, 0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0, 245, 255, 0.1);
-    padding: 16px 32px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  /* BG grid */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .nav-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
+  /* scanline */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .logo h1 {
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .logo {
     font-family: 'Orbitron', monospace;
-    font-size: 1.8rem;
-    background: linear-gradient(135deg, #00f5ff, #ff2d78, #39ff14);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .logo p {
-    font-size: 0.7rem;
-    color: #6060aa;
+    font-size: 1.7rem; font-weight: 900;
     letter-spacing: 2px;
+    text-transform: uppercase;
   }
-
-  .admin-badge {
-    background: linear-gradient(135deg, #ff2d78, #bf00ff);
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .logo span:nth-child(1) { color: var(--neon-cyan); text-shadow: 0 0 18px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
+  .logo span:nth-child(2) { color: var(--neon-pink); text-shadow: 0 0 18px var(--neon-pink), 0 0 40px var(--neon-pink); }
+  .logo span:nth-child(3) { color: var(--neon-green); text-shadow: 0 0 18px var(--neon-green); }
+  .logo-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 4px;
+    margin-top: 2px;
   }
-
-  .admin-badge:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 45, 120, 0.4);
-  }
-
-  .admin-badge.user-mode {
-    background: linear-gradient(135deg, #00f5ff, #0088aa);
-  }
-
-  /* Main Container */
-  .main-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 32px;
-  }
-
-  /* Search & Filter */
-  .search-section {
-    margin-bottom: 32px;
-  }
-
-  .search-bar {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .search-input {
-    flex: 1;
-    background: #151525;
-    border: 1px solid #2a2a40;
-    border-radius: 12px;
-    padding: 14px 20px;
-    color: white;
-    font-size: 0.95rem;
-    transition: all 0.3s;
-  }
-
-  .search-input:focus {
-    outline: none;
-    border-color: #00f5ff;
-    box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
-  }
-
-  .filter-group {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    background: #151525;
-    border: 1px solid #2a2a40;
-    padding: 10px 24px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-weight: 500;
-    color: #a0a0c0;
-  }
-
-  .filter-btn.active {
-    background: linear-gradient(135deg, #00f5ff20, #0088aa20);
-    border-color: #00f5ff;
-    color: #00f5ff;
-  }
-
-  .filter-btn:hover {
-    border-color: #ff2d78;
-  }
-
-  /* Stats */
-  .stats-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-
-  .stat-card {
-    background: #151525;
-    border-radius: 16px;
-    padding: 16px 24px;
-    border: 1px solid #2a2a40;
-    min-width: 150px;
-  }
-
-  .stat-card .number {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #00f5ff;
-  }
-
-  .stat-card .label {
-    font-size: 0.8rem;
-    color: #8080aa;
-    margin-top: 5px;
-  }
-
-  /* Script Grid */
-  .scripts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 24px;
-  }
-
-  .script-card {
-    background: #151525;
-    border: 1px solid #2a2a40;
-    border-radius: 20px;
-    overflow: hidden;
-    transition: all 0.3s;
-  }
-
-  .script-card:hover {
-    transform: translateY(-4px);
-    border-color: #00f5ff40;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  }
-
-  .card-image {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    background: #0f0f1a;
-  }
-
-  .card-content {
-    padding: 20px;
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 12px;
-  }
-
-  .card-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: white;
-  }
-
-  .tag {
+  .badge {
+    background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+    color: #fff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
     padding: 4px 12px;
     border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 0 18px rgba(191,0,255,0.5);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+
+  /* SEARCH */
+  .search-wrap {
+    margin: 32px 0 28px;
+    position: relative;
+  }
+  .search-icon {
+    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    color: var(--neon-cyan); font-size: 1rem; pointer-events: none;
+  }
+  #searchInput {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px 14px 46px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--text);
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  #searchInput:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 16px rgba(0,245,255,0.2);
+  }
+  #searchInput::placeholder { color: var(--muted); }
+
+  /* FILTER TABS */
+  .filter-tabs {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .tab {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem;
+    padding: 7px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .tab:hover { color: var(--text); border-color: var(--neon-cyan); }
+  .tab.active {
+    background: rgba(0,245,255,0.1);
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 12px rgba(0,245,255,0.2);
   }
 
-  .tag-free { background: rgba(57, 255, 20, 0.15); color: #39ff14; border: 1px solid #39ff1440; }
-  .tag-keyless { background: rgba(0, 245, 255, 0.15); color: #00f5ff; border: 1px solid #00f5ff40; }
-  .tag-paid { background: rgba(255, 230, 0, 0.15); color: #ffe600; border: 1px solid #ffe60040; }
+  /* STATS */
+  .stats {
+    display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .stat {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .stat b { color: var(--neon-yellow); font-size: 1rem; }
+
+  /* SCRIPT GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    animation: fadeIn 0.4s ease both;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
+    opacity: 0.7;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,245,255,0.1);
+    border-color: rgba(0,245,255,0.3);
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  .card-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tag-free { background: rgba(57,255,20,0.12); color: var(--neon-green); border: 1px solid rgba(57,255,20,0.3); }
+  .tag-keyless { background: rgba(0,245,255,0.12); color: var(--neon-cyan); border: 1px solid rgba(0,245,255,0.3); }
+  .tag-paid { background: rgba(255,230,0,0.12); color: var(--neon-yellow); border: 1px solid rgba(255,230,0,0.3); }
 
   .card-game {
-    color: #bf00ff;
-    font-size: 0.75rem;
-    margin-bottom: 10px;
-    font-family: monospace;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--neon-purple);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
   }
-
   .card-desc {
-    color: #a0a0c0;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
+    color: #9090cc;
     line-height: 1.5;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
   }
-
-  .features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
+  .card-features {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;
   }
-
-  .feature {
-    background: #0a0a12;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.7rem;
+  .feat {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 9px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
     color: #8080bb;
-    border: 1px solid #2a2a40;
   }
 
-  .card-actions {
-    display: flex;
-    gap: 12px;
-  }
-
-  .btn-copy, .btn-raw {
+  .card-actions { display: flex; gap: 10px; }
+  .btn {
     flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    font-weight: 600;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-copy {
+    background: rgba(0,245,255,0.1);
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+  }
+  .btn-copy:hover {
+    background: rgba(0,245,255,0.2);
+    box-shadow: 0 0 16px rgba(0,245,255,0.3);
+  }
+  .btn.copied {
+    background: rgba(57,255,20,0.15);
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+  }
+
+  /* EMPTY */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+  /* FOOTER */
+  footer {
+    margin-top: 60px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+  footer span { color: var(--neon-cyan); }
+
+  /* ADMIN BUTTON */
+  .admin-toggle {
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+    border: none;
+    color: white;
+    font-family: 'Orbitron', monospace;
     font-size: 0.75rem;
+    padding: 8px 20px;
+    border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s;
-    text-align: center;
-    background: transparent;
+    font-weight: bold;
+  }
+  .admin-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255,45,120,0.5);
   }
 
-  .btn-copy { border: 1px solid #00f5ff; color: #00f5ff; }
-  .btn-raw { border: 1px solid #ff2d78; color: #ff2d78; }
-  .btn-copy:hover, .btn-raw:hover { transform: scale(0.98); }
-
-  /* Admin Modal */
-  .modal-overlay {
+  /* ADMIN MODAL */
+  .admin-modal {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(5,5,16,0.95);
+    backdrop-filter: blur(10px);
     z-index: 1000;
     display: none;
     align-items: center;
     justify-content: center;
   }
-
-  .modal-overlay.active {
+  .admin-modal.active {
     display: flex;
   }
-
-  .modal-container {
-    background: #12121a;
-    border: 1px solid #2a2a40;
-    border-radius: 24px;
+  .admin-modal-content {
+    background: var(--bg2);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 20px;
     width: 90%;
-    max-width: 700px;
+    max-width: 800px;
     max-height: 85vh;
     overflow-y: auto;
+    padding: 24px;
   }
-
-  .modal-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid #2a2a40;
+  .admin-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
   }
-
-  .modal-header h3 {
-    color: #00f5ff;
+  .admin-modal-header h2 {
+    color: var(--neon-cyan);
+    font-family: 'Orbitron';
+    font-size: 1.2rem;
   }
-
-  .modal-close {
+  .close-modal {
     background: none;
     border: none;
-    color: white;
+    color: var(--muted);
     font-size: 24px;
     cursor: pointer;
   }
-
-  .modal-body {
-    padding: 24px;
-  }
-
+  .close-modal:hover { color: var(--neon-pink); }
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
-
   .form-group label {
     display: block;
-    margin-bottom: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #00f5ff;
+    margin-bottom: 6px;
+    color: var(--neon-pink);
+    font-family: 'Share Tech Mono';
+    font-size: 0.75rem;
   }
-
   .form-group input, .form-group textarea, .form-group select {
     width: 100%;
-    background: #0a0a12;
-    border: 1px solid #2a2a40;
-    border-radius: 12px;
-    padding: 12px 16px;
+    background: #0a0a1a;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
     color: white;
+    font-family: 'Rajdhani';
     font-size: 0.9rem;
   }
-
-  .form-group input:focus, .form-group textarea:focus {
-    outline: none;
-    border-color: #ff2d78;
-  }
-
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 15px;
   }
-
-  .image-preview {
-    margin-top: 10px;
-    max-width: 100%;
-    max-height: 120px;
-    border-radius: 12px;
-    display: none;
-  }
-
   .btn-submit {
-    background: linear-gradient(135deg, #39ff14, #00aa00);
+    background: linear-gradient(135deg, var(--neon-green), #00aa00);
     border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
     color: white;
+    font-weight: bold;
     cursor: pointer;
     width: 100%;
-    font-size: 1rem;
+    margin-top: 10px;
   }
-
   .btn-danger {
-    background: linear-gradient(135deg, #ff2d78, #aa0033);
+    background: linear-gradient(135deg, var(--neon-pink), #aa0033);
   }
-
-  .scripts-list {
-    max-height: 400px;
-    overflow-y: auto;
-  }
-
-  .script-item {
-    background: #0a0a12;
-    border-radius: 12px;
-    padding: 12px 16px;
+  .script-list-item {
+    background: #0a0a1a;
+    border-radius: 10px;
+    padding: 12px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-
-  .script-info h4 {
-    font-size: 0.9rem;
-    margin-bottom: 4px;
-  }
-
-  .script-info p {
-    font-size: 0.7rem;
-    color: #8080aa;
-  }
-
   .icon-btn {
     background: transparent;
-    border: 1px solid #2a2a40;
-    padding: 6px 12px;
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 6px;
     color: white;
     cursor: pointer;
     margin-left: 8px;
   }
-
-  .icon-btn:hover {
-    border-color: #00f5ff;
+  .icon-btn:hover { border-color: var(--neon-cyan); }
+  .image-preview {
+    max-width: 100%;
+    max-height: 100px;
+    border-radius: 8px;
+    margin-top: 8px;
+    display: none;
   }
-
-  .empty-state {
+  .admin-stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .admin-stat-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 15px;
     text-align: center;
-    padding: 60px;
-    color: #6060aa;
+    flex: 1;
+    min-width: 100px;
+  }
+  .admin-stat-card h3 {
+    font-size: 1.5rem;
+    color: var(--neon-cyan);
   }
 
-  @media (max-width: 768px) {
-    .main-container { padding: 20px; }
-    .scripts-grid { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-  }
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
 </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="nav-container">
-    <div class="logo">
-      <h1>RobloxScriptHub</h1>
-      <p>PREMIUM SCRIPTS COLLECTION</p>
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="logo">
+          <span>Roblox</span><span>Script</span><span>Hub</span>
+        </div>
+        <div class="logo-sub">FREE SCRIPTS · KEYLESS · UPDATED</div>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <div class="badge">⚡ ONLINE</div>
+        <button class="admin-toggle" id="adminToggleBtn">🔐 ADMIN</button>
+      </div>
     </div>
-    <button class="admin-badge" id="adminBtn">
-      <i class="fas fa-crown"></i> <span id="adminBtnText">ADMIN PANEL</span>
-    </button>
-  </div>
-</nav>
+  </header>
 
-<main class="main-container" id="mainContent"></main>
+  <div style="height:32px"></div>
 
-<!-- Admin Modal -->
-<div class="modal-overlay" id="adminModal">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3><i class="fas fa-tools"></i> Admin Control Panel</h3>
-      <button class="modal-close" id="closeAdminModal">&times;</button>
-    </div>
-    <div class="modal-body" id="adminModalBody"></div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" type="text" placeholder="Search script or game..."/>
   </div>
+
+  <div class="filter-tabs" id="filterTabs">
+    <button class="tab active" data-filter="all">ALL</button>
+    <button class="tab" data-filter="free">FREE</button>
+    <button class="tab" data-filter="keyless">KEYLESS</button>
+    <button class="tab" data-filter="paid">PAID</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">Scripts: <b id="countAll">0</b></div>
+    <div class="stat">Shown: <b id="countShown">0</b></div>
+    <div class="stat">Last Update: <b>2025</b></div>
+  </div>
+
+  <div class="grid" id="scriptGrid"></div>
 </div>
 
-<!-- Raw Modal -->
-<div class="modal-overlay" id="rawModal">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3 id="rawTitle">Raw Script</h3>
-      <button class="modal-close" id="closeRawModal">&times;</button>
+<footer>
+  <div class="container">
+    <span>RobloxScriptHub</span> — For educational purposes only. Use at your own risk.
+  </div>
+</footer>
+
+<!-- ADMIN MODAL -->
+<div class="admin-modal" id="adminModal">
+  <div class="admin-modal-content">
+    <div class="admin-modal-header">
+      <h2>🛠️ ADMIN CONTROL PANEL</h2>
+      <button class="close-modal" id="closeAdminModal">✕</button>
     </div>
-    <div class="modal-body">
-      <pre id="rawContent" style="background:#0a0a12; padding:16px; border-radius:12px; overflow-x:auto; font-size:0.75rem; font-family:monospace;"></pre>
-      <button id="copyRawBtn" style="margin-top:16px; width:100%;" class="btn-submit">📋 Copy to Clipboard</button>
+    <div id="adminBody">
+      <!-- akan diisi JS -->
     </div>
   </div>
 </div>
 
 <script>
-  // ========== DEFAULT SCRIPTS ==========
-  const defaultScripts = [
-    { id: 1, title: "Wonder Chase V3", game: "WONDER CHASE OBBY", desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.", tag: "free", features: ["Auto Portal", "Pickup Collect", "Anti-AFK", "Auto Replay"], image: "", code: `-- Wonder Chase V3 | RobloxScriptHub\nlocal Players = game:GetService("Players")\nlocal VirtualUser = game:GetService("VirtualUser")\nlocal lp = Players.LocalPlayer\nlp.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame) task.wait(1) VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame) end)\nprint("[WonderChase] Loaded")` },
-    { id: 2, title: "Orb Collector ESP", game: "ANY GAME (ORB)", desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.", tag: "keyless", features: ["Auto Collect", "ESP RGB", "FPS Boost"], image: "", code: `-- Orb Collector ESP\nlocal RunService = game:GetService("RunService")\ngetgenv().OrbESP = true\nRunService.Heartbeat:Connect(function()\n    for _, obj in pairs(workspace:GetDescendants()) do\n        if obj:IsA("BasePart") and obj.Name:lower():find("orb") then\n            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, obj, 0)\n        end\n    end\nend)` },
-    { id: 3, title: "Checkpoint Farmer", game: "BADGE / OBBY GAME", desc: "Auto teleport ke semua checkpoint dan farming badge dengan loop otomatis.", tag: "free", features: ["Auto TP", "Badge Farm"], image: "", code: `-- Checkpoint Farmer\nlocal lp = game.Players.LocalPlayer\nlocal hrp = lp.Character.HumanoidRootPart\ngetgenv().CheckpointFarm = true\nwhile getgenv().CheckpointFarm do\n    for i=1,999 do\n        local cp = workspace:FindFirstChild("ClearStage"..i)\n        if cp and cp:FindFirstChildWhichIsA("BasePart") then hrp.CFrame = cp:FindFirstChildWhichIsA("BasePart").CFrame end\n    end\n    task.wait(1)\nend` },
-    { id: 4, title: "Inf Point Clicker", game: "ECLIPSE JOIN & CLAIM", desc: "Infinite Point dengan FireServer AddPoint dan WalkSpeed boost.", tag: "keyless", features: ["Inf Points", "WalkSpeed 50"], image: "", code: `-- Inf Point\nlocal RunService = game:GetService("RunService")\ngetgenv().InfPoint = true\nRunService.Heartbeat:Connect(function()\n    if getgenv().InfPoint then\n        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50\n        pcall(function() game:GetService("ReplicatedStorage"):WaitChild("AddPoint"):FireServer() end)\n    end\nend)` },
-    { id: 5, title: "UGC Auto Claim", game: "EVENT / UGC GAME", desc: "Auto collect UGC item dan fire DJ remote.", tag: "free", features: ["Auto Collect", "Fire Remote"], image: "", code: `-- UGC Auto Claim\nlocal RS = game:GetService("ReplicatedStorage")\ngetgenv().UGCClaim = true\nwhile getgenv().UGCClaim do\n    pcall(function() RS.Remotes.RequestDJ:FireServer() end)\n    task.wait(0.5)\nend` },
-    { id: 6, title: "Anti Lag Ultimate", game: "ALL GAMES", desc: "Optimasi performa Roblox: low quality, no shadow, no fog.", tag: "free", features: ["Low Quality", "No Shadow"], image: "", code: `-- Anti Lag Ultimate\nsettings().Rendering.QualityLevel = 1\ngame:GetService("Lighting").GlobalShadows = false\nprint("AntiLag Applied")` }
-  ];
+// ========== DEFAULT SCRIPTS ==========
+const defaultScripts = [
+  {
+    title: "Wonder Chase V3",
+    game: "WONDER CHASE OBBY",
+    desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.",
+    tag: "free",
+    features: ["Auto Portal", "Pickup Collect", "Anti-AFK", "Auto Replay"],
+    image: "",
+    code: `-- Wonder Chase V3 | RobloxScriptHub
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local VirtualUser = game:GetService("VirtualUser")
 
-  let scripts = [];
-  let isAdmin = false;
-  let activeFilter = "all";
-  let searchQuery = "";
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
 
-  // Load data
-  function loadData() {
-    const stored = localStorage.getItem("RBSH_Data");
-    if (stored) {
-      try {
-        scripts = JSON.parse(stored);
-        if (!Array.isArray(scripts)) throw new Error();
-      } catch(e) { scripts = JSON.parse(JSON.stringify(defaultScripts)); }
-    } else {
-      scripts = JSON.parse(JSON.stringify(defaultScripts));
-    }
-    scripts.forEach((s, i) => { if (!s.id) s.id = Date.now() + i; });
-    saveData();
+-- Anti AFK
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+end)
+
+-- Auto Portal
+local portalDelay = 120
+getgenv().WonderChase = true
+
+task.spawn(function()
+    while getgenv().WonderChase do
+        for _, portal in pairs(workspace:GetDescendants()) do
+            if portal:IsA("BasePart") and portal.Name:lower():find("portal") then
+                char.HumanoidRootPart.CFrame = portal.CFrame + Vector3.new(0,3,0)
+                task.wait(portalDelay)
+            end
+        end
+        task.wait(1)
+    end
+end)
+
+-- Pickup Collection
+task.spawn(function()
+    while getgenv().WonderChase do
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("BasePart") and (obj.Name:lower():find("sticker") or obj.Name:lower():find("pickup")) then
+                firetouchinterest(char.HumanoidRootPart, obj, 0)
+                task.wait(0.05)
+                firetouchinterest(char.HumanoidRootPart, obj, 1)
+            end
+        end
+        task.wait(0.5)
+    end
+end)
+
+print("[WonderChase V3] Loaded")`
+  },
+  {
+    title: "Orb Collector ESP",
+    game: "ANY GAME (ORB)",
+    desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.",
+    tag: "keyless",
+    features: ["Auto Collect", "ESP RGB", "FPS Boost", "Distance Display"],
+    image: "",
+    code: `-- Orb Collector ESP | RobloxScriptHub
+local cfg = getgenv()
+cfg.OrbESP = true
+cfg.AutoCollect = true
+cfg.FPSBoost = true
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+if cfg.FPSBoost then
+    settings().Rendering.QualityLevel = 1
+    game:GetService("Lighting").GlobalShadows = false
+    game:GetService("Lighting").FogEnd = 9e9
+end
+
+local function addESP(part)
+    if part:FindFirstChild("OrbESP") then return end
+    local bb = Instance.new("BillboardGui")
+    bb.Name = "OrbESP"
+    bb.AlwaysOnTop = true
+    bb.Size = UDim2.new(0,60,0,20)
+    bb.StudsOffset = Vector3.new(0,2,0)
+    bb.Parent = part
+    local lbl = Instance.new("TextLabel", bb)
+    lbl.Size = UDim2.new(1,0,1,0)
+    lbl.BackgroundTransparency = 1
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextSize = 13
+    lbl.TextStrokeTransparency = 0
+    local hue = 0
+    RunService.Heartbeat:Connect(function()
+        hue = (hue + 0.005) % 1
+        local c = Color3.fromHSV(hue,1,1)
+        lbl.TextColor3 = c
+        local dist = math.floor((hrp.Position - part.Position).Magnitude)
+        lbl.Text = "ORB ["..dist.."m]"
+    end)
+end
+
+RunService.Heartbeat:Connect(function()
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and (obj.Name == "orbs" or obj.Name == "AnaRenk") then
+            if cfg.OrbESP then addESP(obj) end
+            if cfg.AutoCollect then
+                firetouchinterest(hrp, obj, 0)
+                firetouchinterest(hrp, obj, 1)
+            end
+        end
+    end
+end)
+
+print("[OrbCollector] Loaded")`
+  },
+  {
+    title: "Checkpoint Farmer",
+    game: "BADGE / OBBY GAME",
+    desc: "Auto teleport ke semua checkpoint dan farming badge dengan loop otomatis. Support folder ClearStage.",
+    tag: "free",
+    features: ["Auto TP", "Badge Farm", "ClearStage Loop", "Anti-AFK"],
+    image: "",
+    code: `-- Checkpoint Farmer | RobloxScriptHub
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+getgenv().CheckpointFarm = true
+
+local function teleportCheckpoints()
+    for i = 1, 999 do
+        local folder = workspace:FindFirstChild("ClearStage"..i)
+            or (workspace.Engine and workspace.Engine.Checkpoints and workspace.Engine.Checkpoints:FindFirstChild(tostring(i)))
+        if folder then
+            local part = folder:IsA("BasePart") and folder or folder:FindFirstChildWhichIsA("BasePart")
+            if part then
+                hrp.CFrame = part.CFrame + Vector3.new(0,4,0)
+                task.wait(0.3)
+            end
+        end
+    end
+end
+
+task.spawn(function()
+    while getgenv().CheckpointFarm do
+        teleportCheckpoints()
+        task.wait(1)
+    end
+end)
+
+print("[CheckpointFarmer] Running")`
+  },
+  {
+    title: "Inf Point Clicker",
+    game: "ECLIPSE JOIN & CLAIM",
+    desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan set WalkSpeed via RunService Heartbeat.",
+    tag: "keyless",
+    features: ["Inf Points", "WalkSpeed", "Toggle", "Heartbeat Loop"],
+    image: "",
+    code: `-- Inf Point | RobloxScriptHub
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+
+getgenv().InfPoint = true
+local rs = game:GetService("ReplicatedStorage")
+local addPoint = rs:WaitForChild("AddPoint")
+
+RunService.Heartbeat:Connect(function()
+    if not getgenv().InfPoint then return end
+    hum.WalkSpeed = 50
+    pcall(function()
+        addPoint:FireServer()
+    end)
+end)
+
+print("[InfPoint] Active")`
+  },
+  {
+    title: "UGC Auto Claim",
+    game: "EVENT / UGC GAME",
+    desc: "Auto collect UGC item dan fire DJ remote. Support adidas event dan game event sejenis.",
+    tag: "free",
+    features: ["Auto Collect UGC", "Fire Remote", "RequestDJ", "Loop"],
+    image: "",
+    code: `-- UGC Auto Claim | RobloxScriptHub
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local RS = game:GetService("ReplicatedStorage")
+local lp = Players.LocalPlayer
+local char = lp.Character or lp.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+getgenv().UGCClaim = true
+
+-- Fire DJ remote
+task.spawn(function()
+    while getgenv().UGCClaim do
+        pcall(function()
+            RS.Remotes.RequestDJ:FireServer()
+        end)
+        task.wait(0.5)
+    end
+end)
+
+-- Auto collect items
+RunService.Heartbeat:Connect(function()
+    if not getgenv().UGCClaim then return end
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and (obj.Name:lower():find("ugc") or obj.Name:lower():find("item") or obj.Name:lower():find("collect")) then
+            firetouchinterest(hrp, obj, 0)
+            firetouchinterest(hrp, obj, 1)
+        end
+    end
+end)
+
+print("[UGCAutoClaim] Loaded")`
+  },
+  {
+    title: "Anti Lag Ultimate",
+    game: "ALL GAMES",
+    desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog, particle, dan hide player lain.",
+    tag: "free",
+    features: ["Low Quality", "No Shadow", "No Fog", "Hide Players"],
+    image: "",
+    code: `-- Anti Lag Ultimate | RobloxScriptHub
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+
+settings().Rendering.QualityLevel = 1
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 9e9
+Lighting.FogStart = 9e9
+
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
+        v.Enabled = false
+    end
+end
+
+-- Hide other players
+for _, plr in pairs(Players:GetPlayers()) do
+    if plr ~= lp and plr.Character then
+        for _, part in pairs(plr.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.LocalTransparencyModifier = 1
+            end
+        end
+    end
+end
+
+Players.PlayerAdded:Connect(function(plr)
+    plr.CharacterAdded:Connect(function(char)
+        if plr ~= lp then
+            for _, part in pairs(char:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.LocalTransparencyModifier = 1
+                end
+            end
+        end
+    end)
+end)
+
+print("[AntiLag] Applied")`
+  }
+];
+
+let scripts = [];
+let activeFilter = 'all';
+let searchQuery = '';
+let isAdmin = false;
+
+// Load data dari localStorage
+function loadData() {
+  const stored = localStorage.getItem('RobloxScriptHub_Data');
+  if (stored) {
+    try {
+      scripts = JSON.parse(stored);
+      if (!Array.isArray(scripts)) throw new Error();
+    } catch(e) { scripts = JSON.parse(JSON.stringify(defaultScripts)); }
+  } else {
+    scripts = JSON.parse(JSON.stringify(defaultScripts));
+  }
+  scripts.forEach((s, i) => { if (!s.id) s.id = Date.now() + i; });
+  saveData();
+}
+
+function saveData() {
+  localStorage.setItem('RobloxScriptHub_Data', JSON.stringify(scripts));
+}
+
+// Cek session admin
+function checkAdminSession() {
+  const saved = localStorage.getItem('RobloxScriptHub_Admin');
+  if (saved === 'true') {
+    isAdmin = true;
+    document.getElementById('adminToggleBtn').innerHTML = '👑 ADMIN';
+    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #39ff14, #00aa00)";
+  } else {
+    isAdmin = false;
+    document.getElementById('adminToggleBtn').innerHTML = '🔐 ADMIN';
+    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #ff2d78, #bf00ff)";
+  }
+}
+
+function setAdminMode(value) {
+  isAdmin = value;
+  localStorage.setItem('RobloxScriptHub_Admin', value);
+  if (value) {
+    document.getElementById('adminToggleBtn').innerHTML = '👑 ADMIN';
+    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #39ff14, #00aa00)";
+  } else {
+    document.getElementById('adminToggleBtn').innerHTML = '🔐 ADMIN';
+    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #ff2d78, #bf00ff)";
+  }
+}
+
+function getTagHtml(tag) {
+  if(tag === 'free') return '<span class="card-tag tag-free">FREE</span>';
+  if(tag === 'keyless') return '<span class="card-tag tag-keyless">KEYLESS</span>';
+  return '<span class="card-tag tag-paid">PAID</span>';
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('scriptGrid');
+  const q = searchQuery.toLowerCase();
+  const filtered = scripts.filter(s => {
+    const matchFilter = activeFilter === 'all' || s.tag === activeFilter;
+    const matchSearch = !q || s.title.toLowerCase().includes(q) || s.game.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+  document.getElementById('countAll').textContent = scripts.length;
+  document.getElementById('countShown').textContent = filtered.length;
+
+  if(filtered.length === 0) {
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>No scripts found for "<b>${escapeHtml(searchQuery)}</b>"</div>`;
+    return;
   }
 
-  function saveData() { localStorage.setItem("RBSH_Data", JSON.stringify(scripts)); }
-
-  // Check admin session (tidak perlu login ulang)
-  function checkAdminSession() {
-    const saved = localStorage.getItem("RBSH_Admin");
-    if (saved === "true") {
-      isAdmin = true;
-      document.getElementById("adminBtn").classList.add("user-mode");
-      document.getElementById("adminBtnText").innerHTML = "👑 ADMIN MODE";
-    } else {
-      isAdmin = false;
-      document.getElementById("adminBtn").classList.remove("user-mode");
-      document.getElementById("adminBtnText").innerHTML = "🔐 ADMIN PANEL";
-    }
-  }
-
-  function setAdminMode(value) {
-    isAdmin = value;
-    localStorage.setItem("RBSH_Admin", value);
-    if (value) {
-      document.getElementById("adminBtn").classList.add("user-mode");
-      document.getElementById("adminBtnText").innerHTML = "👑 ADMIN MODE";
-    } else {
-      document.getElementById("adminBtn").classList.remove("user-mode");
-      document.getElementById("adminBtnText").innerHTML = "🔐 ADMIN PANEL";
-    }
-    render();
-  }
-
-  // Render Main View
-  function render() {
-    const container = document.getElementById("mainContent");
-    if (isAdmin) {
-      container.innerHTML = renderUserView();
-      attachUserEvents();
-      openAdminModal();
-    } else {
-      container.innerHTML = renderUserView();
-      attachUserEvents();
-    }
-  }
-
-  function renderUserView() {
-    let filtered = scripts.filter(s => {
-      if (activeFilter !== "all" && s.tag !== activeFilter) return false;
-      if (searchQuery && !s.title.toLowerCase().includes(searchQuery) && !s.game.toLowerCase().includes(searchQuery)) return false;
-      return true;
-    });
-
-    const freeCount = scripts.filter(s => s.tag === "free").length;
-    const keylessCount = scripts.filter(s => s.tag === "keyless").length;
-    const paidCount = scripts.filter(s => s.tag === "paid").length;
-
+  grid.innerHTML = filtered.map((s, i) => {
+    const originalIdx = scripts.findIndex(orig => orig.id === s.id);
+    const imageHtml = s.image ? `<img src="${escapeHtml(s.image)}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:12px;" onerror="this.style.display='none'">` : '';
     return `
-      <div class="search-section">
-        <div class="search-bar">
-          <input type="text" class="search-input" id="searchInput" placeholder="🔍 Cari script atau game..." value="${searchQuery}">
+      <div class="card" style="animation-delay:${i * 0.06}s" data-idx="${originalIdx}">
+        ${imageHtml}
+        <div class="card-header">
+          <div class="card-title">${escapeHtml(s.title)}</div>
+          ${getTagHtml(s.tag)}
         </div>
-        <div class="filter-group" id="filterGroup">
-          <button class="filter-btn ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">ALL</button>
-          <button class="filter-btn ${activeFilter === 'free' ? 'active' : ''}" data-filter="free">FREE</button>
-          <button class="filter-btn ${activeFilter === 'keyless' ? 'active' : ''}" data-filter="keyless">KEYLESS</button>
-          <button class="filter-btn ${activeFilter === 'paid' ? 'active' : ''}" data-filter="paid">PAID</button>
+        <div class="card-game">📁 ${escapeHtml(s.game)}</div>
+        <div class="card-desc">${escapeHtml(s.desc)}</div>
+        <div class="card-features">
+          ${s.features.map(f => `<span class="feat">${escapeHtml(f)}</span>`).join('')}
         </div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-card"><div class="number">${scripts.length}</div><div class="label">Total Scripts</div></div>
-        <div class="stat-card"><div class="number">${freeCount}</div><div class="label">FREE</div></div>
-        <div class="stat-card"><div class="number">${keylessCount}</div><div class="label">KEYLESS</div></div>
-        <div class="stat-card"><div class="number">${paidCount}</div><div class="label">PAID</div></div>
-        <div class="stat-card"><div class="number">${filtered.length}</div><div class="label">Shown</div></div>
-      </div>
-
-      <div class="scripts-grid" id="scriptsGrid">
-        ${filtered.map((s, idx) => `
-          <div class="script-card" data-id="${s.id}">
-            ${s.image ? `<img class="card-image" src="${escapeHtml(s.image)}" onerror="this.style.display='none'">` : ''}
-            <div class="card-content">
-              <div class="card-header">
-                <span class="card-title">${escapeHtml(s.title)}</span>
-                <span class="tag tag-${s.tag}">${s.tag.toUpperCase()}</span>
-              </div>
-              <div class="card-game">📁 ${escapeHtml(s.game)}</div>
-              <div class="card-desc">${escapeHtml(s.desc)}</div>
-              <div class="features">${s.features.map(f => `<span class="feature">${escapeHtml(f)}</span>`).join('')}</div>
-              <div class="card-actions">
-                <button class="btn-copy" data-idx="${idx}"><i class="fas fa-copy"></i> COPY</button>
-                <button class="btn-raw" data-idx="${idx}"><i class="fas fa-code"></i> RAW</button>
-              </div>
-            </div>
-          </div>
-        `).join('')}
-        ${filtered.length === 0 ? '<div class="empty-state"><i class="fas fa-search"></i><br>Tidak ada script yang ditemukan</div>' : ''}
+        <div class="card-actions">
+          <button class="btn btn-copy" onclick="copyScript(${originalIdx}, this)">⎘ COPY</button>
+        </div>
       </div>
     `;
-  }
+  }).join('');
+}
 
-  function attachUserEvents() {
-    // Search
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput) {
-      searchInput.addEventListener("input", (e) => { searchQuery = e.target.value.toLowerCase(); render(); });
+window.copyScript = function(idx, btn) {
+  navigator.clipboard.writeText(scripts[idx].code).then(() => {
+    btn.textContent = '✓ COPIED';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '⎘ COPY'; btn.classList.remove('copied'); }, 1800);
+  });
+};
+
+// ========== ADMIN PANEL ==========
+function openAdminModal() {
+  if (!isAdmin) {
+    const pwd = prompt("🔐 Masukkan password admin:", "");
+    if (pwd === "admin123") {
+      setAdminMode(true);
+      renderAdminPanel();
+      document.getElementById('adminModal').classList.add('active');
+    } else if (pwd !== null) {
+      alert("Password salah!");
     }
-    // Filters
-    document.querySelectorAll("#filterGroup .filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => { activeFilter = btn.dataset.filter; render(); });
-    });
-    // Copy & Raw buttons
-    document.querySelectorAll(".btn-copy").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const idx = parseInt(btn.dataset.idx);
-        let filtered = getFilteredScripts();
-        navigator.clipboard.writeText(filtered[idx].code);
-        btn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
-        setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> COPY', 1500);
-      });
-    });
-    document.querySelectorAll(".btn-raw").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const idx = parseInt(btn.dataset.idx);
-        let filtered = getFilteredScripts();
-        document.getElementById("rawTitle").innerHTML = `RAW - ${filtered[idx].title}`;
-        document.getElementById("rawContent").innerText = filtered[idx].code;
-        document.getElementById("rawModal").classList.add("active");
-      });
-    });
+    return;
   }
+  renderAdminPanel();
+  document.getElementById('adminModal').classList.add('active');
+}
 
-  function getFilteredScripts() {
-    return scripts.filter(s => {
-      if (activeFilter !== "all" && s.tag !== activeFilter) return false;
-      if (searchQuery && !s.title.toLowerCase().includes(searchQuery) && !s.game.toLowerCase().includes(searchQuery)) return false;
-      return true;
-    });
-  }
+function renderAdminPanel() {
+  const adminBody = document.getElementById('adminBody');
+  const freeCount = scripts.filter(s => s.tag === 'free').length;
+  const keylessCount = scripts.filter(s => s.tag === 'keyless').length;
+  const paidCount = scripts.filter(s => s.tag === 'paid').length;
 
-  // Admin Modal
-  function openAdminModal() {
-    const modalBody = document.getElementById("adminModalBody");
-    modalBody.innerHTML = `
-      <div style="margin-bottom: 24px;">
-        <button id="logoutAdminBtn" class="btn-submit btn-danger" style="width:auto; padding:10px 20px;"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
-        <hr style="margin: 20px 0; border-color:#2a2a40;">
+  adminBody.innerHTML = `
+    <div style="margin-bottom: 20px;">
+      <button id="logoutAdminBtn" class="btn-submit btn-danger" style="width:auto; padding:8px 20px;">🚪 LOGOUT</button>
+    </div>
+    <div class="admin-stats">
+      <div class="admin-stat-card"><h3>${scripts.length}</h3><p>Total Script</p></div>
+      <div class="admin-stat-card"><h3>${freeCount}</h3><p>FREE</p></div>
+      <div class="admin-stat-card"><h3>${keylessCount}</h3><p>KEYLESS</p></div>
+      <div class="admin-stat-card"><h3>${paidCount}</h3><p>PAID</p></div>
+    </div>
+
+    <h3 style="color:var(--neon-cyan); margin-bottom:15px;">➕ Tambah / Edit Script</h3>
+    <form id="adminForm">
+      <input type="hidden" id="editId">
+      <div class="form-group"><label>JUDUL SCRIPT *</label><input type="text" id="formTitle" required placeholder="Wonder Chase V3"></div>
+      <div class="form-group"><label>NAMA GAME *</label><input type="text" id="formGame" required placeholder="WONDER CHASE OBBY"></div>
+      <div class="form-group"><label>DESKRIPSI</label><textarea id="formDesc" rows="2" placeholder="Deskripsi script..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>TAG</label><select id="formTag"><option value="free">FREE</option><option value="keyless">KEYLESS</option><option value="paid">PAID</option></select></div>
+        <div class="form-group"><label>FITUR (pisah koma)</label><input type="text" id="formFeatures" placeholder="Auto Farm, ESP"></div>
       </div>
+      <div class="form-group"><label>🎨 IMAGE URL (opsional - GitHub raw)</label><input type="text" id="formImage" placeholder="https://..."><img id="imagePreview" class="image-preview"></div>
+      <div class="form-group"><label>💻 LUA SCRIPT CODE *</label><textarea id="formCode" rows="8" placeholder="-- script lua disini..."></textarea></div>
+      <button type="submit" class="btn-submit">💾 SAVE SCRIPT</button>
+      <button type="button" id="cancelFormBtn" class="btn-submit btn-danger" style="margin-top:10px;">BATAL</button>
+    </form>
 
-      <h4 style="margin-bottom: 16px;"><i class="fas fa-plus-circle"></i> Tambah / Edit Script</h4>
-      <form id="adminForm">
-        <input type="hidden" id="editId">
-        <div class="form-group"><label>JUDUL SCRIPT *</label><input type="text" id="formTitle" required placeholder="Wonder Chase V3"></div>
-        <div class="form-group"><label>NAMA GAME *</label><input type="text" id="formGame" required placeholder="WONDER CHASE OBBY"></div>
-        <div class="form-group"><label>DESKRIPSI</label><textarea id="formDesc" rows="2" placeholder="Deskripsi script..."></textarea></div>
-        <div class="form-row">
-          <div class="form-group"><label>TAG</label><select id="formTag"><option value="free">FREE</option><option value="keyless">KEYLESS</option><option value="paid">PAID</option></select></div>
-          <div class="form-group"><label>FITUR (pisah koma)</label><input type="text" id="formFeatures" placeholder="Auto Farm, ESP"></div>
+    <hr style="margin: 25px 0; border-color:var(--border);">
+
+    <h3 style="color:var(--neon-cyan); margin-bottom:15px;">📋 Daftar Script (${scripts.length})</h3>
+    <div id="adminScriptsList">
+      ${scripts.map(s => `
+        <div class="script-list-item" data-id="${s.id}">
+          <div><strong style="color:var(--neon-cyan);">${escapeHtml(s.title)}</strong><br><span style="font-size:0.7rem; color:var(--muted);">${escapeHtml(s.game)} | ${s.tag}</span></div>
+          <div><button class="icon-btn edit-script" data-id="${s.id}">✏️ EDIT</button><button class="icon-btn delete-script" data-id="${s.id)}">🗑️ DELETE</button></div>
         </div>
-        <div class="form-group"><label>🎨 IMAGE URL (opsional)</label><input type="text" id="formImage" placeholder="https://..."><img id="imagePreview" class="image-preview"></div>
-        <div class="form-group"><label>💻 LUA SCRIPT CODE *</label><textarea id="formCode" rows="6" placeholder="-- script lua disini..."></textarea></div>
-        <button type="submit" class="btn-submit"><i class="fas fa-save"></i> SAVE SCRIPT</button>
-        <button type="button" id="cancelFormBtn" class="btn-submit btn-danger" style="margin-top:10px;">BATAL</button>
-      </form>
+      `).join('')}
+    </div>
+  `;
 
-      <hr style="margin: 30px 0; border-color:#2a2a40;">
-
-      <h4 style="margin-bottom: 16px;"><i class="fas fa-list"></i> Daftar Script (${scripts.length})</h4>
-      <div class="scripts-list" id="adminScriptsList">
-        ${scripts.map(s => `
-          <div class="script-item" data-id="${s.id}">
-            <div class="script-info"><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.game)} | ${s.tag}</p></div>
-            <div><button class="icon-btn edit-script" data-id="${s.id}"><i class="fas fa-edit"></i></button><button class="icon-btn delete-script" data-id="${s.id}"><i class="fas fa-trash"></i></button></div>
-          </div>
-        `).join('')}
-      </div>
-    `;
-
-    // Attach admin events
-    document.getElementById("adminForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const editId = document.getElementById("editId").value;
-      const newScript = {
-        id: editId ? parseInt(editId) : Date.now(),
-        title: document.getElementById("formTitle").value.trim(),
-        game: document.getElementById("formGame").value.trim(),
-        desc: document.getElementById("formDesc").value.trim(),
-        tag: document.getElementById("formTag").value,
-        features: document.getElementById("formFeatures").value.split(",").map(f => f.trim()).filter(f => f),
-        image: document.getElementById("formImage").value.trim(),
-        code: document.getElementById("formCode").value
-      };
-      if (!newScript.title || !newScript.game || !newScript.code) { alert("Judul, Game, dan Code wajib diisi!"); return; }
-      if (editId) {
-        const idx = scripts.findIndex(s => s.id == editId);
-        if (idx !== -1) scripts[idx] = newScript;
-      } else { scripts.push(newScript); }
-      saveData();
-      render();
-      openAdminModal();
-    });
-
-    document.getElementById("cancelFormBtn").addEventListener("click", () => {
-      document.getElementById("editId").value = "";
-      document.getElementById("formTitle").value = "";
-      document.getElementById("formGame").value = "";
-      document.getElementById("formDesc").value = "";
-      document.getElementById("formTag").value = "free";
-      document.getElementById("formFeatures").value = "";
-      document.getElementById("formImage").value = "";
-      document.getElementById("formCode").value = "";
-      document.getElementById("imagePreview").style.display = "none";
-    });
-
-    document.getElementById("logoutAdminBtn").addEventListener("click", () => {
-      setAdminMode(false);
-      document.getElementById("adminModal").classList.remove("active");
-    });
-
-    document.getElementById("formImage").addEventListener("input", (e) => {
-      const preview = document.getElementById("imagePreview");
-      if (e.target.value) { preview.src = e.target.value; preview.style.display = "block"; }
-      else { preview.style.display = "none"; }
-    });
-
-    document.querySelectorAll(".edit-script").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = parseInt(btn.dataset.id);
-        const s = scripts.find(sc => sc.id === id);
-        if (s) {
-          document.getElementById("editId").value = s.id;
-          document.getElementById("formTitle").value = s.title;
-          document.getElementById("formGame").value = s.game;
-          document.getElementById("formDesc").value = s.desc;
-          document.getElementById("formTag").value = s.tag;
-          document.getElementById("formFeatures").value = s.features.join(", ");
-          document.getElementById("formImage").value = s.image || "";
-          document.getElementById("formCode").value = s.code;
-          if (s.image) { document.getElementById("imagePreview").src = s.image; document.getElementById("imagePreview").style.display = "block"; }
-        }
-      });
-    });
-
-    document.querySelectorAll(".delete-script").forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (confirm("Yakin hapus script ini?")) {
-          const id = parseInt(btn.dataset.id);
-          scripts = scripts.filter(s => s.id !== id);
-          saveData();
-          render();
-          openAdminModal();
-        }
-      });
-    });
-
-    document.getElementById("adminModal").classList.add("active");
-  }
-
-  function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
-
-  // Modal handlers
-  document.getElementById("adminBtn").addEventListener("click", () => {
-    if (isAdmin) {
-      openAdminModal();
+  // Events
+  document.getElementById('adminForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const editId = document.getElementById('editId').value;
+    const newScript = {
+      id: editId ? parseInt(editId) : Date.now(),
+      title: document.getElementById('formTitle').value.trim(),
+      game: document.getElementById('formGame').value.trim(),
+      desc: document.getElementById('formDesc').value.trim(),
+      tag: document.getElementById('formTag').value,
+      features: document.getElementById('formFeatures').value.split(',').map(f => f.trim()).filter(f => f),
+      image: document.getElementById('formImage').value.trim(),
+      code: document.getElementById('formCode').value
+    };
+    if (!newScript.title || !newScript.game || !newScript.code) {
+      alert("Judul, Game, dan Code wajib diisi!");
+      return;
+    }
+    if (editId) {
+      const idx = scripts.findIndex(s => s.id == editId);
+      if (idx !== -1) scripts[idx] = newScript;
     } else {
-      const pwd = prompt("🔐 Masukkan password admin:", "");
-      if (pwd === "admin123") {
-        setAdminMode(true);
-        render();
-        openAdminModal();
-      } else if (pwd !== null) { alert("Password salah!"); }
+      scripts.push(newScript);
+    }
+    saveData();
+    renderGrid();
+    renderAdminPanel();
+  });
+
+  document.getElementById('cancelFormBtn').addEventListener('click', () => {
+    document.getElementById('editId').value = '';
+    document.getElementById('formTitle').value = '';
+    document.getElementById('formGame').value = '';
+    document.getElementById('formDesc').value = '';
+    document.getElementById('formTag').value = 'free';
+    document.getElementById('formFeatures').value = '';
+    document.getElementById('formImage').value = '';
+    document.getElementById('formCode').value = '';
+    document.getElementById('imagePreview').style.display = 'none';
+  });
+
+  document.getElementById('logoutAdminBtn').addEventListener('click', () => {
+    setAdminMode(false);
+    document.getElementById('adminModal').classList.remove('active');
+  });
+
+  document.getElementById('formImage').addEventListener('input', (e) => {
+    const preview = document.getElementById('imagePreview');
+    if (e.target.value) {
+      preview.src = e.target.value;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
     }
   });
 
-  document.getElementById("closeAdminModal").addEventListener("click", () => document.getElementById("adminModal").classList.remove("active"));
-  document.getElementById("closeRawModal").addEventListener("click", () => document.getElementById("rawModal").classList.remove("active"));
-  document.getElementById("copyRawBtn").addEventListener("click", () => { navigator.clipboard.writeText(document.getElementById("rawContent").innerText); alert("✅ Script copied!"); });
+  // Edit & Delete
+  document.querySelectorAll('.edit-script').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const s = scripts.find(sc => sc.id === id);
+      if (s) {
+        document.getElementById('editId').value = s.id;
+        document.getElementById('formTitle').value = s.title;
+        document.getElementById('formGame').value = s.game;
+        document.getElementById('formDesc').value = s.desc;
+        document.getElementById('formTag').value = s.tag;
+        document.getElementById('formFeatures').value = s.features.join(', ');
+        document.getElementById('formImage').value = s.image || '';
+        document.getElementById('formCode').value = s.code;
+        if (s.image) {
+          document.getElementById('imagePreview').src = s.image;
+          document.getElementById('imagePreview').style.display = 'block';
+        }
+      }
+    });
+  });
 
-  loadData();
-  checkAdminSession();
-  render();
+  document.querySelectorAll('.delete-script').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm("Yakin hapus script ini?")) {
+        const id = parseInt(btn.dataset.id);
+        scripts = scripts.filter(s => s.id !== id);
+        saveData();
+        renderGrid();
+        renderAdminPanel();
+      }
+    });
+  });
+}
+
+// Event Listeners
+document.getElementById('adminToggleBtn').addEventListener('click', openAdminModal);
+document.getElementById('closeAdminModal').addEventListener('click', () => {
+  document.getElementById('adminModal').classList.remove('active');
+});
+document.getElementById('adminModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('adminModal')) {
+    document.getElementById('adminModal').classList.remove('active');
+  }
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase();
+  renderGrid();
+});
+
+document.getElementById('filterTabs').addEventListener('click', e => {
+  if (!e.target.classList.contains('tab')) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  e.target.classList.add('active');
+  activeFilter = e.target.dataset.filter;
+  renderGrid();
+});
+
+// Initialize
+loadData();
+checkAdminSession();
+renderGrid();
 </script>
 </body>
 </html>
