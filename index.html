@@ -28,7 +28,6 @@
     overflow-x: hidden;
   }
 
-  /* BG grid */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -40,7 +39,6 @@
     z-index: 0;
   }
 
-  /* scanline */
   body::after {
     content: '';
     position: fixed; inset: 0;
@@ -51,7 +49,6 @@
 
   .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
 
-  /* HEADER */
   header {
     padding: 32px 0 24px;
     border-bottom: 1px solid var(--border);
@@ -89,7 +86,6 @@
   }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
 
-  /* SEARCH */
   .search-wrap {
     margin: 32px 0 28px;
     position: relative;
@@ -116,7 +112,6 @@
   }
   #searchInput::placeholder { color: var(--muted); }
 
-  /* FILTER TABS */
   .filter-tabs {
     display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
   }
@@ -140,7 +135,6 @@
     box-shadow: 0 0 12px rgba(0,245,255,0.2);
   }
 
-  /* STATS */
   .stats {
     display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;
   }
@@ -151,14 +145,12 @@
   }
   .stat b { color: var(--neon-yellow); font-size: 1rem; }
 
-  /* SCRIPT GRID */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 20px;
   }
 
-  /* CARD */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -242,7 +234,6 @@
     cursor: pointer;
     transition: all 0.2s;
     text-align: center;
-    text-decoration: none;
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
   .btn-copy {
@@ -260,7 +251,6 @@
     color: var(--neon-green);
   }
 
-  /* EMPTY */
   .empty {
     grid-column: 1/-1;
     text-align: center;
@@ -270,7 +260,6 @@
   }
   .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
 
-  /* FOOTER */
   footer {
     margin-top: 60px;
     padding: 24px 0;
@@ -284,7 +273,7 @@
   footer span { color: var(--neon-cyan); }
 
   /* ADMIN BUTTON */
-  .admin-toggle {
+  .admin-btn {
     background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
     border: none;
     color: white;
@@ -296,18 +285,12 @@
     transition: all 0.3s;
     font-weight: bold;
   }
-  .admin-toggle:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255,45,120,0.5);
-  }
+  .admin-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,45,120,0.5); }
 
   /* ADMIN MODAL */
   .admin-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(5,5,16,0.95);
     backdrop-filter: blur(10px);
     z-index: 1000;
@@ -315,9 +298,7 @@
     align-items: center;
     justify-content: center;
   }
-  .admin-modal.active {
-    display: flex;
-  }
+  .admin-modal.active { display: flex; }
   .admin-modal-content {
     background: var(--bg2);
     border: 1px solid var(--neon-cyan);
@@ -336,29 +317,11 @@
     padding-bottom: 15px;
     border-bottom: 1px solid var(--border);
   }
-  .admin-modal-header h2 {
-    color: var(--neon-cyan);
-    font-family: 'Orbitron';
-    font-size: 1.2rem;
-  }
-  .close-modal {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 24px;
-    cursor: pointer;
-  }
+  .admin-modal-header h2 { color: var(--neon-cyan); font-family: 'Orbitron'; font-size: 1.2rem; }
+  .close-modal { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; }
   .close-modal:hover { color: var(--neon-pink); }
-  .form-group {
-    margin-bottom: 18px;
-  }
-  .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    color: var(--neon-pink);
-    font-family: 'Share Tech Mono';
-    font-size: 0.75rem;
-  }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; margin-bottom: 6px; color: var(--neon-pink); font-family: 'Share Tech Mono'; font-size: 0.75rem; }
   .form-group input, .form-group textarea, .form-group select {
     width: 100%;
     background: #0a0a1a;
@@ -369,11 +332,7 @@
     font-family: 'Rajdhani';
     font-size: 0.9rem;
   }
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
   .btn-submit {
     background: linear-gradient(135deg, var(--neon-green), #00aa00);
     border: none;
@@ -385,9 +344,7 @@
     width: 100%;
     margin-top: 10px;
   }
-  .btn-danger {
-    background: linear-gradient(135deg, var(--neon-pink), #aa0033);
-  }
+  .btn-danger { background: linear-gradient(135deg, var(--neon-pink), #aa0033); }
   .script-list-item {
     background: #0a0a1a;
     border-radius: 10px;
@@ -396,6 +353,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
   }
   .icon-btn {
     background: transparent;
@@ -407,33 +366,11 @@
     margin-left: 8px;
   }
   .icon-btn:hover { border-color: var(--neon-cyan); }
-  .image-preview {
-    max-width: 100%;
-    max-height: 100px;
-    border-radius: 8px;
-    margin-top: 8px;
-    display: none;
-  }
-  .admin-stats {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .admin-stat-card {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
-    flex: 1;
-    min-width: 100px;
-  }
-  .admin-stat-card h3 {
-    font-size: 1.5rem;
-    color: var(--neon-cyan);
-  }
+  .image-preview { max-width: 100%; max-height: 100px; border-radius: 8px; margin-top: 8px; display: none; }
+  .admin-stats { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+  .admin-stat-card { background: var(--card); border-radius: 12px; padding: 15px; text-align: center; flex: 1; min-width: 100px; }
+  .admin-stat-card h3 { font-size: 1.5rem; color: var(--neon-cyan); }
 
-  /* scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
@@ -452,7 +389,7 @@
       </div>
       <div style="display: flex; gap: 12px; align-items: center;">
         <div class="badge">⚡ ONLINE</div>
-        <button class="admin-toggle" id="adminToggleBtn">🔐 ADMIN</button>
+        <button class="admin-btn" id="adminBtn">🔐 ADMIN</button>
       </div>
     </div>
   </header>
@@ -493,16 +430,15 @@
       <h2>🛠️ ADMIN CONTROL PANEL</h2>
       <button class="close-modal" id="closeAdminModal">✕</button>
     </div>
-    <div id="adminBody">
-      <!-- akan diisi JS -->
-    </div>
+    <div id="adminBody"></div>
   </div>
 </div>
 
 <script>
-// ========== DEFAULT SCRIPTS ==========
+// ========== DEFAULT SCRIPTS (6 SCRIPT ASLI) ==========
 const defaultScripts = [
   {
+    id: 1,
     title: "Wonder Chase V3",
     game: "WONDER CHASE OBBY",
     desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.",
@@ -557,6 +493,7 @@ end)
 print("[WonderChase V3] Loaded")`
   },
   {
+    id: 2,
     title: "Orb Collector ESP",
     game: "ANY GAME (ORB)",
     desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.",
@@ -620,6 +557,7 @@ end)
 print("[OrbCollector] Loaded")`
   },
   {
+    id: 3,
     title: "Checkpoint Farmer",
     game: "BADGE / OBBY GAME",
     desc: "Auto teleport ke semua checkpoint dan farming badge dengan loop otomatis. Support folder ClearStage.",
@@ -658,6 +596,7 @@ end)
 print("[CheckpointFarmer] Running")`
   },
   {
+    id: 4,
     title: "Inf Point Clicker",
     game: "ECLIPSE JOIN & CLAIM",
     desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan set WalkSpeed via RunService Heartbeat.",
@@ -686,6 +625,7 @@ end)
 print("[InfPoint] Active")`
   },
   {
+    id: 5,
     title: "UGC Auto Claim",
     game: "EVENT / UGC GAME",
     desc: "Auto collect UGC item dan fire DJ remote. Support adidas event dan game event sejenis.",
@@ -726,6 +666,7 @@ end)
 print("[UGCAutoClaim] Loaded")`
   },
   {
+    id: 6,
     title: "Anti Lag Ultimate",
     game: "ALL GAMES",
     desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog, particle, dan hide player lain.",
@@ -780,9 +721,9 @@ let activeFilter = 'all';
 let searchQuery = '';
 let isAdmin = false;
 
-// Load data dari localStorage
+// Load data
 function loadData() {
-  const stored = localStorage.getItem('RobloxScriptHub_Data');
+  const stored = localStorage.getItem('RBSH_Scripts');
   if (stored) {
     try {
       scripts = JSON.parse(stored);
@@ -791,44 +732,37 @@ function loadData() {
   } else {
     scripts = JSON.parse(JSON.stringify(defaultScripts));
   }
-  scripts.forEach((s, i) => { if (!s.id) s.id = Date.now() + i; });
   saveData();
 }
 
 function saveData() {
-  localStorage.setItem('RobloxScriptHub_Data', JSON.stringify(scripts));
+  localStorage.setItem('RBSH_Scripts', JSON.stringify(scripts));
 }
 
 // Cek session admin
 function checkAdminSession() {
-  const saved = localStorage.getItem('RobloxScriptHub_Admin');
-  if (saved === 'true') {
+  const session = localStorage.getItem('RBSH_Admin');
+  if (session === 'true') {
     isAdmin = true;
-    document.getElementById('adminToggleBtn').innerHTML = '👑 ADMIN';
-    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #39ff14, #00aa00)";
+    document.getElementById('adminBtn').innerHTML = '👑 ADMIN';
+    document.getElementById('adminBtn').style.background = "linear-gradient(135deg, #39ff14, #00aa00)";
   } else {
     isAdmin = false;
-    document.getElementById('adminToggleBtn').innerHTML = '🔐 ADMIN';
-    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #ff2d78, #bf00ff)";
+    document.getElementById('adminBtn').innerHTML = '🔐 ADMIN';
+    document.getElementById('adminBtn').style.background = "linear-gradient(135deg, #ff2d78, #bf00ff)";
   }
 }
 
-function setAdminMode(value) {
+function setAdmin(value) {
   isAdmin = value;
-  localStorage.setItem('RobloxScriptHub_Admin', value);
+  localStorage.setItem('RBSH_Admin', value);
   if (value) {
-    document.getElementById('adminToggleBtn').innerHTML = '👑 ADMIN';
-    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #39ff14, #00aa00)";
+    document.getElementById('adminBtn').innerHTML = '👑 ADMIN';
+    document.getElementById('adminBtn').style.background = "linear-gradient(135deg, #39ff14, #00aa00)";
   } else {
-    document.getElementById('adminToggleBtn').innerHTML = '🔐 ADMIN';
-    document.getElementById('adminToggleBtn').style.background = "linear-gradient(135deg, #ff2d78, #bf00ff)";
+    document.getElementById('adminBtn').innerHTML = '🔐 ADMIN';
+    document.getElementById('adminBtn').style.background = "linear-gradient(135deg, #ff2d78, #bf00ff)";
   }
-}
-
-function getTagHtml(tag) {
-  if(tag === 'free') return '<span class="card-tag tag-free">FREE</span>';
-  if(tag === 'keyless') return '<span class="card-tag tag-keyless">KEYLESS</span>';
-  return '<span class="card-tag tag-paid">PAID</span>';
 }
 
 function escapeHtml(str) {
@@ -841,31 +775,38 @@ function escapeHtml(str) {
   });
 }
 
+function getTagClass(tag) {
+  if (tag === 'free') return 'tag-free';
+  if (tag === 'keyless') return 'tag-keyless';
+  return 'tag-paid';
+}
+
+// RENDER GRID
 function renderGrid() {
   const grid = document.getElementById('scriptGrid');
   const q = searchQuery.toLowerCase();
   const filtered = scripts.filter(s => {
-    const matchFilter = activeFilter === 'all' || s.tag === activeFilter;
-    const matchSearch = !q || s.title.toLowerCase().includes(q) || s.game.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q);
-    return matchFilter && matchSearch;
+    if (activeFilter !== 'all' && s.tag !== activeFilter) return false;
+    if (q && !s.title.toLowerCase().includes(q) && !s.game.toLowerCase().includes(q) && !s.desc.toLowerCase().includes(q)) return false;
+    return true;
   });
-  document.getElementById('countAll').textContent = scripts.length;
-  document.getElementById('countShown').textContent = filtered.length;
-
-  if(filtered.length === 0) {
+  
+  document.getElementById('countAll').innerText = scripts.length;
+  document.getElementById('countShown').innerText = filtered.length;
+  
+  if (filtered.length === 0) {
     grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>No scripts found for "<b>${escapeHtml(searchQuery)}</b>"</div>`;
     return;
   }
-
-  grid.innerHTML = filtered.map((s, i) => {
-    const originalIdx = scripts.findIndex(orig => orig.id === s.id);
-    const imageHtml = s.image ? `<img src="${escapeHtml(s.image)}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:12px;" onerror="this.style.display='none'">` : '';
+  
+  grid.innerHTML = filtered.map((s, idx) => {
+    const realIdx = scripts.findIndex(orig => orig.id === s.id);
     return `
-      <div class="card" style="animation-delay:${i * 0.06}s" data-idx="${originalIdx}">
-        ${imageHtml}
+      <div class="card">
+        ${s.image ? `<img src="${escapeHtml(s.image)}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:12px;" onerror="this.style.display='none'">` : ''}
         <div class="card-header">
           <div class="card-title">${escapeHtml(s.title)}</div>
-          ${getTagHtml(s.tag)}
+          <div class="card-tag ${getTagClass(s.tag)}">${s.tag.toUpperCase()}</div>
         </div>
         <div class="card-game">📁 ${escapeHtml(s.game)}</div>
         <div class="card-desc">${escapeHtml(s.desc)}</div>
@@ -873,18 +814,24 @@ function renderGrid() {
           ${s.features.map(f => `<span class="feat">${escapeHtml(f)}</span>`).join('')}
         </div>
         <div class="card-actions">
-          <button class="btn btn-copy" onclick="copyScript(${originalIdx}, this)">⎘ COPY</button>
+          <button class="btn btn-copy" onclick="copyScript(${realIdx}, this)">⎘ COPY</button>
         </div>
       </div>
     `;
   }).join('');
 }
 
+// COPY FUNCTION
 window.copyScript = function(idx, btn) {
   navigator.clipboard.writeText(scripts[idx].code).then(() => {
-    btn.textContent = '✓ COPIED';
+    btn.innerHTML = '✓ COPIED';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '⎘ COPY'; btn.classList.remove('copied'); }, 1800);
+    setTimeout(() => {
+      btn.innerHTML = '⎘ COPY';
+      btn.classList.remove('copied');
+    }, 1800);
+  }).catch(() => {
+    alert('Gagal copy!');
   });
 };
 
@@ -893,7 +840,7 @@ function openAdminModal() {
   if (!isAdmin) {
     const pwd = prompt("🔐 Masukkan password admin:", "");
     if (pwd === "admin123") {
-      setAdminMode(true);
+      setAdmin(true);
       renderAdminPanel();
       document.getElementById('adminModal').classList.add('active');
     } else if (pwd !== null) {
@@ -906,14 +853,14 @@ function openAdminModal() {
 }
 
 function renderAdminPanel() {
-  const adminBody = document.getElementById('adminBody');
+  const body = document.getElementById('adminBody');
   const freeCount = scripts.filter(s => s.tag === 'free').length;
   const keylessCount = scripts.filter(s => s.tag === 'keyless').length;
   const paidCount = scripts.filter(s => s.tag === 'paid').length;
-
-  adminBody.innerHTML = `
-    <div style="margin-bottom: 20px;">
-      <button id="logoutAdminBtn" class="btn-submit btn-danger" style="width:auto; padding:8px 20px;">🚪 LOGOUT</button>
+  
+  body.innerHTML = `
+    <div style="margin-bottom:20px;">
+      <button id="logoutAdmin" class="btn-submit btn-danger" style="width:auto; padding:8px 20px;">🚪 LOGOUT</button>
     </div>
     <div class="admin-stats">
       <div class="admin-stat-card"><h3>${scripts.length}</h3><p>Total Script</p></div>
@@ -921,8 +868,8 @@ function renderAdminPanel() {
       <div class="admin-stat-card"><h3>${keylessCount}</h3><p>KEYLESS</p></div>
       <div class="admin-stat-card"><h3>${paidCount}</h3><p>PAID</p></div>
     </div>
-
-    <h3 style="color:var(--neon-cyan); margin-bottom:15px;">➕ Tambah / Edit Script</h3>
+    
+    <h3 style="color:var(--neon-cyan); margin-bottom:15px;">➕ TAMBAH / EDIT SCRIPT</h3>
     <form id="adminForm">
       <input type="hidden" id="editId">
       <div class="form-group"><label>JUDUL SCRIPT *</label><input type="text" id="formTitle" required placeholder="Wonder Chase V3"></div>
@@ -932,26 +879,26 @@ function renderAdminPanel() {
         <div class="form-group"><label>TAG</label><select id="formTag"><option value="free">FREE</option><option value="keyless">KEYLESS</option><option value="paid">PAID</option></select></div>
         <div class="form-group"><label>FITUR (pisah koma)</label><input type="text" id="formFeatures" placeholder="Auto Farm, ESP"></div>
       </div>
-      <div class="form-group"><label>🎨 IMAGE URL (opsional - GitHub raw)</label><input type="text" id="formImage" placeholder="https://..."><img id="imagePreview" class="image-preview"></div>
+      <div class="form-group"><label>🎨 IMAGE URL (opsional)</label><input type="text" id="formImage" placeholder="https://..."><img id="imagePreview" class="image-preview"></div>
       <div class="form-group"><label>💻 LUA SCRIPT CODE *</label><textarea id="formCode" rows="8" placeholder="-- script lua disini..."></textarea></div>
       <button type="submit" class="btn-submit">💾 SAVE SCRIPT</button>
-      <button type="button" id="cancelFormBtn" class="btn-submit btn-danger" style="margin-top:10px;">BATAL</button>
+      <button type="button" id="cancelForm" class="btn-submit btn-danger" style="margin-top:10px;">BATAL</button>
     </form>
-
-    <hr style="margin: 25px 0; border-color:var(--border);">
-
-    <h3 style="color:var(--neon-cyan); margin-bottom:15px;">📋 Daftar Script (${scripts.length})</h3>
+    
+    <hr style="margin:25px 0; border-color:var(--border);">
+    
+    <h3 style="color:var(--neon-cyan); margin-bottom:15px;">📋 DAFTAR SCRIPT (${scripts.length})</h3>
     <div id="adminScriptsList">
       ${scripts.map(s => `
         <div class="script-list-item" data-id="${s.id}">
           <div><strong style="color:var(--neon-cyan);">${escapeHtml(s.title)}</strong><br><span style="font-size:0.7rem; color:var(--muted);">${escapeHtml(s.game)} | ${s.tag}</span></div>
-          <div><button class="icon-btn edit-script" data-id="${s.id}">✏️ EDIT</button><button class="icon-btn delete-script" data-id="${s.id)}">🗑️ DELETE</button></div>
+          <div><button class="icon-btn edit-script" data-id="${s.id}">✏️ EDIT</button><button class="icon-btn delete-script" data-id="${s.id}">🗑️ DELETE</button></div>
         </div>
       `).join('')}
     </div>
   `;
-
-  // Events
+  
+  // Form submit
   document.getElementById('adminForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const editId = document.getElementById('editId').value;
@@ -979,8 +926,9 @@ function renderAdminPanel() {
     renderGrid();
     renderAdminPanel();
   });
-
-  document.getElementById('cancelFormBtn').addEventListener('click', () => {
+  
+  // Cancel form
+  document.getElementById('cancelForm').addEventListener('click', () => {
     document.getElementById('editId').value = '';
     document.getElementById('formTitle').value = '';
     document.getElementById('formGame').value = '';
@@ -991,12 +939,14 @@ function renderAdminPanel() {
     document.getElementById('formCode').value = '';
     document.getElementById('imagePreview').style.display = 'none';
   });
-
-  document.getElementById('logoutAdminBtn').addEventListener('click', () => {
-    setAdminMode(false);
+  
+  // Logout
+  document.getElementById('logoutAdmin').addEventListener('click', () => {
+    setAdmin(false);
     document.getElementById('adminModal').classList.remove('active');
   });
-
+  
+  // Image preview
   document.getElementById('formImage').addEventListener('input', (e) => {
     const preview = document.getElementById('imagePreview');
     if (e.target.value) {
@@ -1006,8 +956,8 @@ function renderAdminPanel() {
       preview.style.display = 'none';
     }
   });
-
-  // Edit & Delete
+  
+  // Edit scripts
   document.querySelectorAll('.edit-script').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = parseInt(btn.dataset.id);
@@ -1028,7 +978,8 @@ function renderAdminPanel() {
       }
     });
   });
-
+  
+  // Delete scripts
   document.querySelectorAll('.delete-script').forEach(btn => {
     btn.addEventListener('click', () => {
       if (confirm("Yakin hapus script ini?")) {
@@ -1042,8 +993,8 @@ function renderAdminPanel() {
   });
 }
 
-// Event Listeners
-document.getElementById('adminToggleBtn').addEventListener('click', openAdminModal);
+// EVENT LISTENERS
+document.getElementById('adminBtn').addEventListener('click', openAdminModal);
 document.getElementById('closeAdminModal').addEventListener('click', () => {
   document.getElementById('adminModal').classList.remove('active');
 });
@@ -1053,12 +1004,12 @@ document.getElementById('adminModal').addEventListener('click', (e) => {
   }
 });
 
-document.getElementById('searchInput').addEventListener('input', e => {
-  searchQuery = e.target.value.toLowerCase();
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchQuery = e.target.value;
   renderGrid();
 });
 
-document.getElementById('filterTabs').addEventListener('click', e => {
+document.getElementById('filterTabs').addEventListener('click', (e) => {
   if (!e.target.classList.contains('tab')) return;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   e.target.classList.add('active');
@@ -1066,7 +1017,7 @@ document.getElementById('filterTabs').addEventListener('click', e => {
   renderGrid();
 });
 
-// Initialize
+// INIT
 loadData();
 checkAdminSession();
 renderGrid();
