@@ -86,6 +86,21 @@
   }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
 
+  /* ADMIN BUTTON */
+  .admin-btn {
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+    border: none;
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    padding: 8px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+  }
+  .admin-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,45,120,0.5); }
+
   .search-wrap {
     margin: 32px 0 28px;
     position: relative;
@@ -272,22 +287,79 @@
   }
   footer span { color: var(--neon-cyan); }
 
-  /* ADMIN BUTTON */
-  .admin-btn {
-    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  /* MODAL STYLES - Custom Login & Admin */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(5,5,16,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-content {
+    background: var(--bg2);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(0,245,255,0.3);
+  }
+  .modal-content h2 {
+    color: var(--neon-cyan);
+    font-family: 'Orbitron';
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .modal-content input {
+    width: 100%;
+    background: #0a0a1a;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 15px;
+    color: white;
+    font-family: 'Rajdhani';
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  .modal-content input:focus {
+    outline: none;
+    border-color: var(--neon-pink);
+  }
+  .modal-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  .modal-buttons button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Orbitron';
+    font-size: 0.8rem;
+  }
+  .btn-login {
+    background: linear-gradient(135deg, var(--neon-green), #00aa00);
     border: none;
     color: white;
-    font-family: 'Orbitron', monospace;
-    font-size: 0.75rem;
-    padding: 8px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-weight: bold;
   }
-  .admin-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,45,120,0.5); }
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--neon-pink);
+    color: var(--neon-pink);
+  }
+  .error-msg {
+    color: var(--neon-pink);
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 0.8rem;
+  }
 
-  /* ADMIN MODAL */
+  /* ADMIN MODAL (besar) */
   .admin-modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -423,7 +495,20 @@
   </div>
 </footer>
 
-<!-- ADMIN MODAL -->
+<!-- LOGIN MODAL CUSTOM -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-content">
+    <h2>🔐 ADMIN LOGIN</h2>
+    <div id="loginError" class="error-msg"></div>
+    <input type="password" id="loginPassword" placeholder="Masukkan password admin" autocomplete="off">
+    <div class="modal-buttons">
+      <button class="btn-login" id="loginSubmit">LOGIN</button>
+      <button class="btn-cancel" id="loginCancel">BATAL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
 <div class="admin-modal" id="adminModal">
   <div class="admin-modal-content">
     <div class="admin-modal-header">
@@ -435,7 +520,7 @@
 </div>
 
 <script>
-// ========== DEFAULT SCRIPTS (6 SCRIPT ASLI) ==========
+// ========== DEFAULT SCRIPTS ==========
 const defaultScripts = [
   {
     id: 1,
@@ -835,17 +920,32 @@ window.copyScript = function(idx, btn) {
   });
 };
 
+// ========== LOGIN MODAL CUSTOM ==========
+function showLoginModal() {
+  document.getElementById('loginModal').classList.add('active');
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').innerHTML = '';
+}
+
+function hideLoginModal() {
+  document.getElementById('loginModal').classList.remove('active');
+}
+
+function doLogin() {
+  const pwd = document.getElementById('loginPassword').value;
+  if (pwd === "admin123") {
+    setAdmin(true);
+    hideLoginModal();
+    openAdminPanel();
+  } else {
+    document.getElementById('loginError').innerHTML = '❌ Password salah!';
+  }
+}
+
 // ========== ADMIN PANEL ==========
-function openAdminModal() {
+function openAdminPanel() {
   if (!isAdmin) {
-    const pwd = prompt("🔐 Masukkan password admin:", "");
-    if (pwd === "admin123") {
-      setAdmin(true);
-      renderAdminPanel();
-      document.getElementById('adminModal').classList.add('active');
-    } else if (pwd !== null) {
-      alert("Password salah!");
-    }
+    showLoginModal();
     return;
   }
   renderAdminPanel();
@@ -994,7 +1094,7 @@ function renderAdminPanel() {
 }
 
 // EVENT LISTENERS
-document.getElementById('adminBtn').addEventListener('click', openAdminModal);
+document.getElementById('adminBtn').addEventListener('click', openAdminPanel);
 document.getElementById('closeAdminModal').addEventListener('click', () => {
   document.getElementById('adminModal').classList.remove('active');
 });
@@ -1002,6 +1102,16 @@ document.getElementById('adminModal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('adminModal')) {
     document.getElementById('adminModal').classList.remove('active');
   }
+});
+
+// Login modal events
+document.getElementById('loginSubmit').addEventListener('click', doLogin);
+document.getElementById('loginCancel').addEventListener('click', hideLoginModal);
+document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('loginModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('loginModal')) hideLoginModal();
 });
 
 document.getElementById('searchInput').addEventListener('input', (e) => {
