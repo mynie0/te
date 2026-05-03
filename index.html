@@ -86,7 +86,6 @@
   }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
 
-  /* ADMIN BUTTON */
   .admin-btn {
     background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
     border: none;
@@ -162,38 +161,50 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
   }
 
   .card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 22px;
-    position: relative;
+    border-radius: 16px;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     animation: fadeIn 0.4s ease both;
   }
-  .card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
-    opacity: 0.7;
-  }
   .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,245,255,0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,245,255,0.1);
     border-color: rgba(0,245,255,0.3);
   }
   @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
 
+  /* CARD IMAGE - FULL WIDTH, TIDAK KEPOTONG */
+  .card-image-container {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a0a1a, #050510);
+  }
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .card:hover .card-image {
+    transform: scale(1.02);
+  }
+
+  .card-content {
+    padding: 20px;
+  }
+
   .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
   .card-title {
     font-family: 'Orbitron', monospace;
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: #fff;
     letter-spacing: 0.5px;
@@ -214,14 +225,14 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.72rem;
     color: var(--neon-purple);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     letter-spacing: 1px;
   }
   .card-desc {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: #9090cc;
     line-height: 1.5;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .card-features {
     display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;
@@ -236,15 +247,15 @@
     color: #8080bb;
   }
 
-  .card-actions { display: flex; gap: 10px; }
+  .card-actions { display: flex; gap: 12px; }
   .btn {
     flex: 1;
     font-family: 'Orbitron', monospace;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 1px;
-    padding: 9px 12px;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
     transition: all 0.2s;
@@ -287,7 +298,7 @@
   }
   footer span { color: var(--neon-cyan); }
 
-  /* MODAL STYLES - Custom Login & Admin */
+  /* MODAL STYLES */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -359,7 +370,7 @@
     font-size: 0.8rem;
   }
 
-  /* ADMIN MODAL (besar) */
+  /* ADMIN MODAL */
   .admin-modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -438,7 +449,7 @@
     margin-left: 8px;
   }
   .icon-btn:hover { border-color: var(--neon-cyan); }
-  .image-preview { max-width: 100%; max-height: 100px; border-radius: 8px; margin-top: 8px; display: none; }
+  .image-preview { max-width: 100%; max-height: 100px; border-radius: 8px; margin-top: 8px; display: none; object-fit: cover; }
   .admin-stats { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
   .admin-stat-card { background: var(--card); border-radius: 12px; padding: 15px; text-align: center; flex: 1; min-width: 100px; }
   .admin-stat-card h3 { font-size: 1.5rem; color: var(--neon-cyan); }
@@ -495,7 +506,7 @@
   </div>
 </footer>
 
-<!-- LOGIN MODAL CUSTOM -->
+<!-- LOGIN MODAL -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal-content">
     <h2>🔐 ADMIN LOGIN</h2>
@@ -520,285 +531,14 @@
 </div>
 
 <script>
-// ========== DEFAULT SCRIPTS ==========
+// DEFAULT SCRIPTS
 const defaultScripts = [
-  {
-    id: 1,
-    title: "Wonder Chase V3",
-    game: "WONDER CHASE OBBY",
-    desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.",
-    tag: "free",
-    features: ["Auto Portal", "Pickup Collect", "Anti-AFK", "Auto Replay"],
-    image: "",
-    code: `-- Wonder Chase V3 | RobloxScriptHub
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local VirtualUser = game:GetService("VirtualUser")
-
-local lp = Players.LocalPlayer
-local char = lp.Character or lp.CharacterAdded:Wait()
-
--- Anti AFK
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-    task.wait(1)
-    VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-end)
-
--- Auto Portal
-local portalDelay = 120
-getgenv().WonderChase = true
-
-task.spawn(function()
-    while getgenv().WonderChase do
-        for _, portal in pairs(workspace:GetDescendants()) do
-            if portal:IsA("BasePart") and portal.Name:lower():find("portal") then
-                char.HumanoidRootPart.CFrame = portal.CFrame + Vector3.new(0,3,0)
-                task.wait(portalDelay)
-            end
-        end
-        task.wait(1)
-    end
-end)
-
--- Pickup Collection
-task.spawn(function()
-    while getgenv().WonderChase do
-        for _, obj in pairs(workspace:GetDescendants()) do
-            if obj:IsA("BasePart") and (obj.Name:lower():find("sticker") or obj.Name:lower():find("pickup")) then
-                firetouchinterest(char.HumanoidRootPart, obj, 0)
-                task.wait(0.05)
-                firetouchinterest(char.HumanoidRootPart, obj, 1)
-            end
-        end
-        task.wait(0.5)
-    end
-end)
-
-print("[WonderChase V3] Loaded")`
-  },
-  {
-    id: 2,
-    title: "Orb Collector ESP",
-    game: "ANY GAME (ORB)",
-    desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.",
-    tag: "keyless",
-    features: ["Auto Collect", "ESP RGB", "FPS Boost", "Distance Display"],
-    image: "",
-    code: `-- Orb Collector ESP | RobloxScriptHub
-local cfg = getgenv()
-cfg.OrbESP = true
-cfg.AutoCollect = true
-cfg.FPSBoost = true
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local lp = Players.LocalPlayer
-local char = lp.Character or lp.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
-
-if cfg.FPSBoost then
-    settings().Rendering.QualityLevel = 1
-    game:GetService("Lighting").GlobalShadows = false
-    game:GetService("Lighting").FogEnd = 9e9
-end
-
-local function addESP(part)
-    if part:FindFirstChild("OrbESP") then return end
-    local bb = Instance.new("BillboardGui")
-    bb.Name = "OrbESP"
-    bb.AlwaysOnTop = true
-    bb.Size = UDim2.new(0,60,0,20)
-    bb.StudsOffset = Vector3.new(0,2,0)
-    bb.Parent = part
-    local lbl = Instance.new("TextLabel", bb)
-    lbl.Size = UDim2.new(1,0,1,0)
-    lbl.BackgroundTransparency = 1
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 13
-    lbl.TextStrokeTransparency = 0
-    local hue = 0
-    RunService.Heartbeat:Connect(function()
-        hue = (hue + 0.005) % 1
-        local c = Color3.fromHSV(hue,1,1)
-        lbl.TextColor3 = c
-        local dist = math.floor((hrp.Position - part.Position).Magnitude)
-        lbl.Text = "ORB ["..dist.."m]"
-    end)
-end
-
-RunService.Heartbeat:Connect(function()
-    for _, obj in pairs(workspace:GetDescendants()) do
-        if obj:IsA("BasePart") and (obj.Name == "orbs" or obj.Name == "AnaRenk") then
-            if cfg.OrbESP then addESP(obj) end
-            if cfg.AutoCollect then
-                firetouchinterest(hrp, obj, 0)
-                firetouchinterest(hrp, obj, 1)
-            end
-        end
-    end
-end)
-
-print("[OrbCollector] Loaded")`
-  },
-  {
-    id: 3,
-    title: "Checkpoint Farmer",
-    game: "BADGE / OBBY GAME",
-    desc: "Auto teleport ke semua checkpoint dan farming badge dengan loop otomatis. Support folder ClearStage.",
-    tag: "free",
-    features: ["Auto TP", "Badge Farm", "ClearStage Loop", "Anti-AFK"],
-    image: "",
-    code: `-- Checkpoint Farmer | RobloxScriptHub
-local Players = game:GetService("Players")
-local lp = Players.LocalPlayer
-local char = lp.Character or lp.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
-
-getgenv().CheckpointFarm = true
-
-local function teleportCheckpoints()
-    for i = 1, 999 do
-        local folder = workspace:FindFirstChild("ClearStage"..i)
-            or (workspace.Engine and workspace.Engine.Checkpoints and workspace.Engine.Checkpoints:FindFirstChild(tostring(i)))
-        if folder then
-            local part = folder:IsA("BasePart") and folder or folder:FindFirstChildWhichIsA("BasePart")
-            if part then
-                hrp.CFrame = part.CFrame + Vector3.new(0,4,0)
-                task.wait(0.3)
-            end
-        end
-    end
-end
-
-task.spawn(function()
-    while getgenv().CheckpointFarm do
-        teleportCheckpoints()
-        task.wait(1)
-    end
-end)
-
-print("[CheckpointFarmer] Running")`
-  },
-  {
-    id: 4,
-    title: "Inf Point Clicker",
-    game: "ECLIPSE JOIN & CLAIM",
-    desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan set WalkSpeed via RunService Heartbeat.",
-    tag: "keyless",
-    features: ["Inf Points", "WalkSpeed", "Toggle", "Heartbeat Loop"],
-    image: "",
-    code: `-- Inf Point | RobloxScriptHub
-local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-local lp = Players.LocalPlayer
-local char = lp.Character or lp.CharacterAdded:Wait()
-local hum = char:WaitForChild("Humanoid")
-
-getgenv().InfPoint = true
-local rs = game:GetService("ReplicatedStorage")
-local addPoint = rs:WaitForChild("AddPoint")
-
-RunService.Heartbeat:Connect(function()
-    if not getgenv().InfPoint then return end
-    hum.WalkSpeed = 50
-    pcall(function()
-        addPoint:FireServer()
-    end)
-end)
-
-print("[InfPoint] Active")`
-  },
-  {
-    id: 5,
-    title: "UGC Auto Claim",
-    game: "EVENT / UGC GAME",
-    desc: "Auto collect UGC item dan fire DJ remote. Support adidas event dan game event sejenis.",
-    tag: "free",
-    features: ["Auto Collect UGC", "Fire Remote", "RequestDJ", "Loop"],
-    image: "",
-    code: `-- UGC Auto Claim | RobloxScriptHub
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local RS = game:GetService("ReplicatedStorage")
-local lp = Players.LocalPlayer
-local char = lp.Character or lp.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
-
-getgenv().UGCClaim = true
-
--- Fire DJ remote
-task.spawn(function()
-    while getgenv().UGCClaim do
-        pcall(function()
-            RS.Remotes.RequestDJ:FireServer()
-        end)
-        task.wait(0.5)
-    end
-end)
-
--- Auto collect items
-RunService.Heartbeat:Connect(function()
-    if not getgenv().UGCClaim then return end
-    for _, obj in pairs(workspace:GetDescendants()) do
-        if obj:IsA("BasePart") and (obj.Name:lower():find("ugc") or obj.Name:lower():find("item") or obj.Name:lower():find("collect")) then
-            firetouchinterest(hrp, obj, 0)
-            firetouchinterest(hrp, obj, 1)
-        end
-    end
-end)
-
-print("[UGCAutoClaim] Loaded")`
-  },
-  {
-    id: 6,
-    title: "Anti Lag Ultimate",
-    game: "ALL GAMES",
-    desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog, particle, dan hide player lain.",
-    tag: "free",
-    features: ["Low Quality", "No Shadow", "No Fog", "Hide Players"],
-    image: "",
-    code: `-- Anti Lag Ultimate | RobloxScriptHub
-local Lighting = game:GetService("Lighting")
-local Players = game:GetService("Players")
-local lp = Players.LocalPlayer
-
-settings().Rendering.QualityLevel = 1
-Lighting.GlobalShadows = false
-Lighting.FogEnd = 9e9
-Lighting.FogStart = 9e9
-
-for _, v in pairs(workspace:GetDescendants()) do
-    if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
-        v.Enabled = false
-    end
-end
-
--- Hide other players
-for _, plr in pairs(Players:GetPlayers()) do
-    if plr ~= lp and plr.Character then
-        for _, part in pairs(plr.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.LocalTransparencyModifier = 1
-            end
-        end
-    end
-end
-
-Players.PlayerAdded:Connect(function(plr)
-    plr.CharacterAdded:Connect(function(char)
-        if plr ~= lp then
-            for _, part in pairs(char:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.LocalTransparencyModifier = 1
-                end
-            end
-        end
-    end)
-end)
-
-print("[AntiLag] Applied")`
-  }
+  { id: 1, title: "Wonder Chase V3", game: "WONDER CHASE OBBY", desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.", tag: "free", features: ["Auto Portal", "Pickup Collect", "Anti-AFK", "Auto Replay"], image: "", code: `-- Wonder Chase V3 | RobloxScriptHub\nlocal Players = game:GetService("Players")\nlocal VirtualUser = game:GetService("VirtualUser")\nlocal lp = Players.LocalPlayer\nlp.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame) task.wait(1) VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame) end)\nprint("[WonderChase] Loaded")` },
+  { id: 2, title: "Orb Collector ESP", game: "ANY GAME (ORB)", desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.", tag: "keyless", features: ["Auto Collect", "ESP RGB", "FPS Boost", "Distance Display"], image: "", code: `-- Orb Collector ESP\nlocal RunService = game:GetService("RunService")\ngetgenv().OrbESP = true\nRunService.Heartbeat:Connect(function()\n    for _, obj in pairs(workspace:GetDescendants()) do\n        if obj:IsA("BasePart") and obj.Name:lower():find("orb") then\n            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, obj, 0)\n        end\n    end\nend)` },
+  { id: 3, title: "Checkpoint Farmer", game: "BADGE / OBBY GAME", desc: "Auto teleport ke semua checkpoint dan farming badge dengan loop otomatis. Support folder ClearStage.", tag: "free", features: ["Auto TP", "Badge Farm", "ClearStage Loop", "Anti-AFK"], image: "", code: `-- Checkpoint Farmer\nlocal Players = game:GetService("Players")\nlocal lp = Players.LocalPlayer\nlocal hrp = lp.Character.HumanoidRootPart\ngetgenv().CheckpointFarm = true\nwhile getgenv().CheckpointFarm do\n    for i=1,999 do\n        local cp = workspace:FindFirstChild("ClearStage"..i)\n        if cp and cp:FindFirstChildWhichIsA("BasePart") then hrp.CFrame = cp:FindFirstChildWhichIsA("BasePart").CFrame end\n    end\n    task.wait(1)\nend` },
+  { id: 4, title: "Inf Point Clicker", game: "ECLIPSE JOIN & CLAIM", desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan set WalkSpeed via RunService Heartbeat.", tag: "keyless", features: ["Inf Points", "WalkSpeed", "Toggle", "Heartbeat Loop"], image: "", code: `-- Inf Point\nlocal RunService = game:GetService("RunService")\ngetgenv().InfPoint = true\nRunService.Heartbeat:Connect(function()\n    if getgenv().InfPoint then\n        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50\n        pcall(function() game:GetService("ReplicatedStorage"):WaitChild("AddPoint"):FireServer() end)\n    end\nend)` },
+  { id: 5, title: "UGC Auto Claim", game: "EVENT / UGC GAME", desc: "Auto collect UGC item dan fire DJ remote. Support adidas event dan game event sejenis.", tag: "free", features: ["Auto Collect UGC", "Fire Remote", "RequestDJ", "Loop"], image: "", code: `-- UGC Auto Claim\nlocal RS = game:GetService("ReplicatedStorage")\ngetgenv().UGCClaim = true\nwhile getgenv().UGCClaim do\n    pcall(function() RS.Remotes.RequestDJ:FireServer() end)\n    task.wait(0.5)\nend` },
+  { id: 6, title: "Anti Lag Ultimate", game: "ALL GAMES", desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog, particle, dan hide player lain.", tag: "free", features: ["Low Quality", "No Shadow", "No Fog", "Hide Players"], image: "", code: `-- Anti Lag Ultimate\nsettings().Rendering.QualityLevel = 1\ngame:GetService("Lighting").GlobalShadows = false\nprint("AntiLag Applied")` }
 ];
 
 let scripts = [];
@@ -806,25 +546,16 @@ let activeFilter = 'all';
 let searchQuery = '';
 let isAdmin = false;
 
-// Load data
 function loadData() {
   const stored = localStorage.getItem('RBSH_Scripts');
   if (stored) {
-    try {
-      scripts = JSON.parse(stored);
-      if (!Array.isArray(scripts)) throw new Error();
-    } catch(e) { scripts = JSON.parse(JSON.stringify(defaultScripts)); }
-  } else {
-    scripts = JSON.parse(JSON.stringify(defaultScripts));
-  }
+    try { scripts = JSON.parse(stored); if (!Array.isArray(scripts)) throw new Error(); }
+    catch(e) { scripts = JSON.parse(JSON.stringify(defaultScripts)); }
+  } else { scripts = JSON.parse(JSON.stringify(defaultScripts)); }
   saveData();
 }
+function saveData() { localStorage.setItem('RBSH_Scripts', JSON.stringify(scripts)); }
 
-function saveData() {
-  localStorage.setItem('RBSH_Scripts', JSON.stringify(scripts));
-}
-
-// Cek session admin
 function checkAdminSession() {
   const session = localStorage.getItem('RBSH_Admin');
   if (session === 'true') {
@@ -850,15 +581,7 @@ function setAdmin(value) {
   }
 }
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, function(m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
-  });
-}
+function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
 
 function getTagClass(tag) {
   if (tag === 'free') return 'tag-free';
@@ -866,7 +589,6 @@ function getTagClass(tag) {
   return 'tag-paid';
 }
 
-// RENDER GRID
 function renderGrid() {
   const grid = document.getElementById('scriptGrid');
   const q = searchQuery.toLowerCase();
@@ -886,68 +608,55 @@ function renderGrid() {
   
   grid.innerHTML = filtered.map((s, idx) => {
     const realIdx = scripts.findIndex(orig => orig.id === s.id);
+    const imageHtml = s.image ? `
+      <div class="card-image-container">
+        <img class="card-image" src="${escapeHtml(s.image)}" alt="${escapeHtml(s.title)}" onerror="this.parentElement.style.display='none'">
+      </div>
+    ` : '';
     return `
       <div class="card">
-        ${s.image ? `<img src="${escapeHtml(s.image)}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:12px;" onerror="this.style.display='none'">` : ''}
-        <div class="card-header">
-          <div class="card-title">${escapeHtml(s.title)}</div>
-          <div class="card-tag ${getTagClass(s.tag)}">${s.tag.toUpperCase()}</div>
-        </div>
-        <div class="card-game">📁 ${escapeHtml(s.game)}</div>
-        <div class="card-desc">${escapeHtml(s.desc)}</div>
-        <div class="card-features">
-          ${s.features.map(f => `<span class="feat">${escapeHtml(f)}</span>`).join('')}
-        </div>
-        <div class="card-actions">
-          <button class="btn btn-copy" onclick="copyScript(${realIdx}, this)">⎘ COPY</button>
+        ${imageHtml}
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-title">${escapeHtml(s.title)}</div>
+            <div class="card-tag ${getTagClass(s.tag)}">${s.tag.toUpperCase()}</div>
+          </div>
+          <div class="card-game">📁 ${escapeHtml(s.game)}</div>
+          <div class="card-desc">${escapeHtml(s.desc)}</div>
+          <div class="card-features">${s.features.map(f => `<span class="feat">${escapeHtml(f)}</span>`).join('')}</div>
+          <div class="card-actions">
+            <button class="btn btn-copy" onclick="copyScript(${realIdx}, this)">⎘ COPY</button>
+          </div>
         </div>
       </div>
     `;
   }).join('');
 }
 
-// COPY FUNCTION
 window.copyScript = function(idx, btn) {
   navigator.clipboard.writeText(scripts[idx].code).then(() => {
     btn.innerHTML = '✓ COPIED';
     btn.classList.add('copied');
-    setTimeout(() => {
-      btn.innerHTML = '⎘ COPY';
-      btn.classList.remove('copied');
-    }, 1800);
-  }).catch(() => {
-    alert('Gagal copy!');
-  });
+    setTimeout(() => { btn.innerHTML = '⎘ COPY'; btn.classList.remove('copied'); }, 1800);
+  }).catch(() => alert('Gagal copy!'));
 };
 
-// ========== LOGIN MODAL CUSTOM ==========
+// LOGIN MODAL
 function showLoginModal() {
   document.getElementById('loginModal').classList.add('active');
   document.getElementById('loginPassword').value = '';
   document.getElementById('loginError').innerHTML = '';
 }
-
-function hideLoginModal() {
-  document.getElementById('loginModal').classList.remove('active');
-}
-
+function hideLoginModal() { document.getElementById('loginModal').classList.remove('active'); }
 function doLogin() {
   const pwd = document.getElementById('loginPassword').value;
-  if (pwd === "admin123") {
-    setAdmin(true);
-    hideLoginModal();
-    openAdminPanel();
-  } else {
-    document.getElementById('loginError').innerHTML = '❌ Password salah!';
-  }
+  if (pwd === "admin123") { setAdmin(true); hideLoginModal(); openAdminPanel(); }
+  else { document.getElementById('loginError').innerHTML = '❌ Password salah!'; }
 }
 
-// ========== ADMIN PANEL ==========
+// ADMIN PANEL
 function openAdminPanel() {
-  if (!isAdmin) {
-    showLoginModal();
-    return;
-  }
+  if (!isAdmin) { showLoginModal(); return; }
   renderAdminPanel();
   document.getElementById('adminModal').classList.add('active');
 }
@@ -959,16 +668,13 @@ function renderAdminPanel() {
   const paidCount = scripts.filter(s => s.tag === 'paid').length;
   
   body.innerHTML = `
-    <div style="margin-bottom:20px;">
-      <button id="logoutAdmin" class="btn-submit btn-danger" style="width:auto; padding:8px 20px;">🚪 LOGOUT</button>
-    </div>
+    <div style="margin-bottom:20px;"><button id="logoutAdmin" class="btn-submit btn-danger" style="width:auto; padding:8px 20px;">🚪 LOGOUT</button></div>
     <div class="admin-stats">
       <div class="admin-stat-card"><h3>${scripts.length}</h3><p>Total Script</p></div>
       <div class="admin-stat-card"><h3>${freeCount}</h3><p>FREE</p></div>
       <div class="admin-stat-card"><h3>${keylessCount}</h3><p>KEYLESS</p></div>
       <div class="admin-stat-card"><h3>${paidCount}</h3><p>PAID</p></div>
     </div>
-    
     <h3 style="color:var(--neon-cyan); margin-bottom:15px;">➕ TAMBAH / EDIT SCRIPT</h3>
     <form id="adminForm">
       <input type="hidden" id="editId">
@@ -984,21 +690,11 @@ function renderAdminPanel() {
       <button type="submit" class="btn-submit">💾 SAVE SCRIPT</button>
       <button type="button" id="cancelForm" class="btn-submit btn-danger" style="margin-top:10px;">BATAL</button>
     </form>
-    
     <hr style="margin:25px 0; border-color:var(--border);">
-    
     <h3 style="color:var(--neon-cyan); margin-bottom:15px;">📋 DAFTAR SCRIPT (${scripts.length})</h3>
-    <div id="adminScriptsList">
-      ${scripts.map(s => `
-        <div class="script-list-item" data-id="${s.id}">
-          <div><strong style="color:var(--neon-cyan);">${escapeHtml(s.title)}</strong><br><span style="font-size:0.7rem; color:var(--muted);">${escapeHtml(s.game)} | ${s.tag}</span></div>
-          <div><button class="icon-btn edit-script" data-id="${s.id}">✏️ EDIT</button><button class="icon-btn delete-script" data-id="${s.id}">🗑️ DELETE</button></div>
-        </div>
-      `).join('')}
-    </div>
+    <div id="adminScriptsList">${scripts.map(s => `<div class="script-list-item" data-id="${s.id}"><div><strong style="color:var(--neon-cyan);">${escapeHtml(s.title)}</strong><br><span style="font-size:0.7rem; color:var(--muted);">${escapeHtml(s.game)} | ${s.tag}</span></div><div><button class="icon-btn edit-script" data-id="${s.id}">✏️ EDIT</button><button class="icon-btn delete-script" data-id="${s.id}">🗑️ DELETE</button></div></div>`).join('')}</div>
   `;
   
-  // Form submit
   document.getElementById('adminForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const editId = document.getElementById('editId').value;
@@ -1012,122 +708,37 @@ function renderAdminPanel() {
       image: document.getElementById('formImage').value.trim(),
       code: document.getElementById('formCode').value
     };
-    if (!newScript.title || !newScript.game || !newScript.code) {
-      alert("Judul, Game, dan Code wajib diisi!");
-      return;
-    }
-    if (editId) {
-      const idx = scripts.findIndex(s => s.id == editId);
-      if (idx !== -1) scripts[idx] = newScript;
-    } else {
-      scripts.push(newScript);
-    }
-    saveData();
-    renderGrid();
-    renderAdminPanel();
+    if (!newScript.title || !newScript.game || !newScript.code) { alert("Judul, Game, dan Code wajib diisi!"); return; }
+    if (editId) { const idx = scripts.findIndex(s => s.id == editId); if (idx !== -1) scripts[idx] = newScript; }
+    else { scripts.push(newScript); }
+    saveData(); renderGrid(); renderAdminPanel();
   });
   
-  // Cancel form
   document.getElementById('cancelForm').addEventListener('click', () => {
-    document.getElementById('editId').value = '';
-    document.getElementById('formTitle').value = '';
-    document.getElementById('formGame').value = '';
-    document.getElementById('formDesc').value = '';
-    document.getElementById('formTag').value = 'free';
-    document.getElementById('formFeatures').value = '';
-    document.getElementById('formImage').value = '';
-    document.getElementById('formCode').value = '';
-    document.getElementById('imagePreview').style.display = 'none';
+    document.getElementById('editId').value = ''; document.getElementById('formTitle').value = ''; document.getElementById('formGame').value = '';
+    document.getElementById('formDesc').value = ''; document.getElementById('formTag').value = 'free'; document.getElementById('formFeatures').value = '';
+    document.getElementById('formImage').value = ''; document.getElementById('formCode').value = ''; document.getElementById('imagePreview').style.display = 'none';
   });
   
-  // Logout
-  document.getElementById('logoutAdmin').addEventListener('click', () => {
-    setAdmin(false);
-    document.getElementById('adminModal').classList.remove('active');
-  });
+  document.getElementById('logoutAdmin').addEventListener('click', () => { setAdmin(false); document.getElementById('adminModal').classList.remove('active'); });
+  document.getElementById('formImage').addEventListener('input', (e) => { const preview = document.getElementById('imagePreview'); if (e.target.value) { preview.src = e.target.value; preview.style.display = 'block'; } else { preview.style.display = 'none'; } });
   
-  // Image preview
-  document.getElementById('formImage').addEventListener('input', (e) => {
-    const preview = document.getElementById('imagePreview');
-    if (e.target.value) {
-      preview.src = e.target.value;
-      preview.style.display = 'block';
-    } else {
-      preview.style.display = 'none';
-    }
-  });
+  document.querySelectorAll('.edit-script').forEach(btn => { btn.addEventListener('click', () => { const id = parseInt(btn.dataset.id); const s = scripts.find(sc => sc.id === id); if (s) { document.getElementById('editId').value = s.id; document.getElementById('formTitle').value = s.title; document.getElementById('formGame').value = s.game; document.getElementById('formDesc').value = s.desc; document.getElementById('formTag').value = s.tag; document.getElementById('formFeatures').value = s.features.join(', '); document.getElementById('formImage').value = s.image || ''; document.getElementById('formCode').value = s.code; if (s.image) { document.getElementById('imagePreview').src = s.image; document.getElementById('imagePreview').style.display = 'block'; } } }); });
   
-  // Edit scripts
-  document.querySelectorAll('.edit-script').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
-      const s = scripts.find(sc => sc.id === id);
-      if (s) {
-        document.getElementById('editId').value = s.id;
-        document.getElementById('formTitle').value = s.title;
-        document.getElementById('formGame').value = s.game;
-        document.getElementById('formDesc').value = s.desc;
-        document.getElementById('formTag').value = s.tag;
-        document.getElementById('formFeatures').value = s.features.join(', ');
-        document.getElementById('formImage').value = s.image || '';
-        document.getElementById('formCode').value = s.code;
-        if (s.image) {
-          document.getElementById('imagePreview').src = s.image;
-          document.getElementById('imagePreview').style.display = 'block';
-        }
-      }
-    });
-  });
-  
-  // Delete scripts
-  document.querySelectorAll('.delete-script').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (confirm("Yakin hapus script ini?")) {
-        const id = parseInt(btn.dataset.id);
-        scripts = scripts.filter(s => s.id !== id);
-        saveData();
-        renderGrid();
-        renderAdminPanel();
-      }
-    });
-  });
+  document.querySelectorAll('.delete-script').forEach(btn => { btn.addEventListener('click', () => { if (confirm("Yakin hapus script ini?")) { const id = parseInt(btn.dataset.id); scripts = scripts.filter(s => s.id !== id); saveData(); renderGrid(); renderAdminPanel(); } }); });
 }
 
-// EVENT LISTENERS
+// EVENTS
 document.getElementById('adminBtn').addEventListener('click', openAdminPanel);
-document.getElementById('closeAdminModal').addEventListener('click', () => {
-  document.getElementById('adminModal').classList.remove('active');
-});
-document.getElementById('adminModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('adminModal')) {
-    document.getElementById('adminModal').classList.remove('active');
-  }
-});
-
-// Login modal events
+document.getElementById('closeAdminModal').addEventListener('click', () => document.getElementById('adminModal').classList.remove('active'));
+document.getElementById('adminModal').addEventListener('click', (e) => { if (e.target === document.getElementById('adminModal')) document.getElementById('adminModal').classList.remove('active'); });
 document.getElementById('loginSubmit').addEventListener('click', doLogin);
 document.getElementById('loginCancel').addEventListener('click', hideLoginModal);
-document.getElementById('loginPassword').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') doLogin();
-});
-document.getElementById('loginModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('loginModal')) hideLoginModal();
-});
+document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('loginModal').addEventListener('click', (e) => { if (e.target === document.getElementById('loginModal')) hideLoginModal(); });
+document.getElementById('searchInput').addEventListener('input', (e) => { searchQuery = e.target.value; renderGrid(); });
+document.getElementById('filterTabs').addEventListener('click', (e) => { if (!e.target.classList.contains('tab')) return; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); e.target.classList.add('active'); activeFilter = e.target.dataset.filter; renderGrid(); });
 
-document.getElementById('searchInput').addEventListener('input', (e) => {
-  searchQuery = e.target.value;
-  renderGrid();
-});
-
-document.getElementById('filterTabs').addEventListener('click', (e) => {
-  if (!e.target.classList.contains('tab')) return;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  e.target.classList.add('active');
-  activeFilter = e.target.dataset.filter;
-  renderGrid();
-});
-
-// INIT
 loadData();
 checkAdminSession();
 renderGrid();
