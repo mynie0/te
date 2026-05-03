@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>RobloxScriptHub | Admin Panel</title>
+<title>RobloxScriptHub | Admin Panel + Images</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -27,7 +27,6 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
-  /* BG grid & scanline */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -54,6 +53,8 @@
   .logo span:nth-child(3) { color: var(--neon-green); text-shadow: 0 0 18px var(--neon-green); }
   .logo-sub { font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 4px; margin-top: 2px; }
   .badge { background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink)); color: #fff; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; box-shadow: 0 0 18px rgba(191,0,255,0.5); animation: pulse 2s ease-in-out infinite; }
+  .admin-btn { background: rgba(255,45,120,0.2); border: 1px solid var(--neon-pink); color: var(--neon-pink); font-family: 'Orbitron', monospace; font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; cursor: pointer; transition: 0.2s; }
+  .admin-btn:hover { background: rgba(255,45,120,0.4); box-shadow: 0 0 12px rgba(255,45,120,0.4); }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
 
   /* SEARCH & FILTERS */
@@ -70,11 +71,12 @@
   .stat b { color: var(--neon-yellow); font-size: 1rem; }
 
   /* SCRIPT GRID */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; position: relative; transition: transform 0.2s, box-shadow 0.2s; animation: fadeIn 0.4s ease both; }
   .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple)); opacity: 0.7; }
   .card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,245,255,0.1); border-color: rgba(0,245,255,0.3); }
   @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+  .card-image { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 14px; background: #0a0a1a; border: 1px solid var(--border); }
   .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
   .card-title { font-family: 'Orbitron', monospace; font-size: 0.92rem; font-weight: 700; color: #fff; }
   .card-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
@@ -94,10 +96,10 @@
   .btn.copied { background: rgba(57,255,20,0.15); border-color: var(--neon-green); color: var(--neon-green); }
   .empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); font-family: 'Share Tech Mono', monospace; }
 
-  /* MODAL (RAW & ADMIN) */
+  /* MODAL */
   .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,16,0.94); backdrop-filter: blur(8px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.open { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--neon-cyan); border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,245,255,0.3); }
+  .modal { background: var(--bg2); border: 1px solid var(--neon-cyan); border-radius: 16px; width: 100%; max-width: 850px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,245,255,0.3); }
   .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(0,245,255,0.3); }
   .modal-title { font-family: 'Orbitron', monospace; font-size: 0.9rem; color: var(--neon-cyan); }
   .modal-close { background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
@@ -106,32 +108,31 @@
   .modal-body pre { font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: #c0c0ff; white-space: pre-wrap; word-break: break-all; }
   .modal-footer { padding: 14px 20px; border-top: 1px solid rgba(0,245,255,0.2); display: flex; gap: 10px; justify-content: flex-end; }
 
-  /* ADMIN PANEL STYLES (Form) */
+  /* ADMIN FORM */
   .admin-form-group { margin-bottom: 18px; }
   .admin-form-group label { display: block; font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--neon-cyan); margin-bottom: 5px; letter-spacing: 1px; }
   .admin-form-group input, .admin-form-group textarea, .admin-form-group select { width: 100%; background: #0a0a1a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: white; font-family: 'Rajdhani', monospace; font-size: 0.9rem; outline: none; }
   .admin-form-group textarea { font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; resize: vertical; min-height: 180px; }
   .admin-form-group input:focus, .admin-form-group textarea:focus { border-color: var(--neon-pink); }
-  .admin-row { display: flex; gap: 12px; margin-bottom: 18px; }
-  .admin-row .admin-form-group { flex: 1; }
+  .admin-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .admin-row .admin-form-group { flex: 1; min-width: 150px; }
   .btn-danger { border-color: #ff2d78; color: #ff2d78; }
   .btn-success { border-color: var(--neon-green); color: var(--neon-green); }
-  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
   .admin-badge { background: #ff2d7822; border: 1px solid #ff2d78; border-radius: 20px; padding: 5px 12px; font-size: 0.7rem; color: var(--neon-pink); }
-
+  .script-list-item { background: #0a0a1a; margin-bottom: 10px; padding: 12px; border-radius: 10px; border-left: 3px solid #ff2d78; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
   footer { margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--border); text-align: center; font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--muted); }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
-  .hidden-admin-indicator { position: fixed; bottom: 15px; right: 15px; background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px; font-size: 10px; color: #39ff14; font-family: monospace; z-index: 99; pointer-events: none; opacity: 0.6; }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
     <div class="header-inner">
-      <div><div class="logo"><span>Roblox</span><span>Script</span><span>Hub</span></div><div class="logo-sub">FREE SCRIPTS · KEYLESS · ADMIN PANEL</div></div>
-      <div class="badge">⚡ ADMIN READY</div>
+      <div><div class="logo"><span>Roblox</span><span>Script</span><span>Hub</span></div><div class="logo-sub">FREE SCRIPTS · KEYLESS · IMAGE SUPPORT</div></div>
+      <button class="admin-btn" id="adminButton">🔧 ADMIN PANEL</button>
     </div>
   </header>
   <div class="search-wrap"><span class="search-icon">🔍</span><input id="searchInput" type="text" placeholder="Search script or game..."/></div>
@@ -141,25 +142,39 @@
     <button class="tab" data-filter="keyless">KEYLESS</button>
     <button class="tab" data-filter="paid">PAID</button>
   </div>
-  <div class="stats"><div class="stat">Scripts: <b id="countAll">0</b></div><div class="stat">Shown: <b id="countShown">0</b></div><div class="stat">Mode: <b id="modeIndicator">USER</b></div></div>
+  <div class="stats"><div class="stat">Scripts: <b id="countAll">0</b></div><div class="stat">Shown: <b id="countShown">0</b></div></div>
   <div class="grid" id="scriptGrid"></div>
 </div>
-<footer><div class="container"><span>RobloxScriptHub</span> — Educational only | Press <span style="color:#00f5ff;">`~`</span> to open Admin Panel</div></footer>
-<div class="hidden-admin-indicator" id="adminIndicator">🔒 ADMIN MODE (press ~)</div>
+<footer><div class="container"><span>RobloxScriptHub</span> — Educational only | Admin Panel by button</div></footer>
 
 <!-- RAW MODAL -->
 <div class="modal-overlay" id="rawModal"><div class="modal"><div class="modal-header"><div class="modal-title" id="modalTitle">RAW SCRIPT</div><button class="modal-close" id="modalClose">✕</button></div><div class="modal-body"><pre id="modalContent"></pre></div><div class="modal-footer"><button class="btn btn-copy" id="modalCopyBtn" style="flex:none;">COPY</button><button class="btn btn-raw" style="flex:none;" id="modalCloseBtn">CLOSE</button></div></div></div>
 
-<!-- ADMIN PANEL MODAL (CRUD) -->
-<div class="modal-overlay" id="adminModal"><div class="modal" style="max-width: 850px;"><div class="modal-header"><div class="modal-title">🛠️ ADMIN CONTROL PANEL | Manage Scripts</div><button class="modal-close" id="adminModalClose">✕</button></div><div class="modal-body" id="adminModalBody"><div class="admin-header"><div class="admin-badge">🔐 Full CRUD</div><button id="newScriptBtn" class="btn btn-success" style="flex:none; padding:6px 18px;">+ NEW SCRIPT</button></div><div id="adminScriptsList" style="margin-bottom: 30px;"></div><hr style="border-color:rgba(0,245,255,0.2); margin: 20px 0;"><h3 style="font-family:Orbitron;font-size:0.8rem;color:#00f5ff;">📝 Edit / Create Form</h3><form id="adminForm"><input type="hidden" id="editIndex" value="-1"><div class="admin-form-group"><label>SCRIPT TITLE</label><input type="text" id="formTitle" required placeholder="Wonder Chase V3"></div><div class="admin-form-group"><label>GAME NAME</label><input type="text" id="formGame" required placeholder="WONDER CHASE OBBY"></div><div class="admin-form-group"><label>DESCRIPTION</label><textarea id="formDesc" rows="2" placeholder="Auto play obby dengan portal teleportation..."></textarea></div><div class="admin-row"><div class="admin-form-group"><label>TAG (free/keyless/paid)</label><select id="formTag"><option value="free">FREE</option><option value="keyless">KEYLESS</option><option value="paid">PAID</option></select></div><div class="admin-form-group"><label>FEATURES (comma separated)</label><input type="text" id="formFeatures" placeholder="Auto Portal, Pickup Collect, Anti-AFK"></div></div><div class="admin-form-group"><label>LUA SCRIPT CODE</label><textarea id="formCode" rows="12" placeholder="-- paste your script here..."></textarea></div><div style="display: flex; gap: 12px; margin-top: 15px;"><button type="submit" class="btn btn-success" style="flex:1;">💾 SAVE / UPDATE</button><button type="button" id="cancelFormBtn" class="btn btn-raw" style="flex:1;">CANCEL</button></div></form></div></div></div>
+<!-- ADMIN PANEL MODAL -->
+<div class="modal-overlay" id="adminModal"><div class="modal"><div class="modal-header"><div class="modal-title">🛠️ ADMIN CONTROL PANEL | Manage Scripts + Images</div><button class="modal-close" id="adminModalClose">✕</button></div><div class="modal-body" id="adminModalBody">
+  <div class="admin-header"><div class="admin-badge">🔐 Full CRUD + Image URL</div><button id="newScriptBtn" class="btn btn-success" style="flex:none; padding:6px 18px;">+ NEW SCRIPT</button></div>
+  <div id="adminScriptsList" style="margin-bottom: 30px;"></div>
+  <hr style="border-color:rgba(0,245,255,0.2); margin: 20px 0;">
+  <h3 style="font-family:Orbitron;font-size:0.8rem;color:#00f5ff;">📝 Edit / Create Script</h3>
+  <form id="adminForm"><input type="hidden" id="editIndex" value="-1">
+    <div class="admin-form-group"><label>SCRIPT TITLE *</label><input type="text" id="formTitle" required placeholder="Wonder Chase V3"></div>
+    <div class="admin-form-group"><label>GAME NAME *</label><input type="text" id="formGame" required placeholder="WONDER CHASE OBBY"></div>
+    <div class="admin-form-group"><label>DESCRIPTION</label><textarea id="formDesc" rows="2" placeholder="Auto play obby dengan portal teleportation..."></textarea></div>
+    <div class="admin-row"><div class="admin-form-group"><label>TAG</label><select id="formTag"><option value="free">FREE</option><option value="keyless">KEYLESS</option><option value="paid">PAID</option></select></div>
+    <div class="admin-form-group"><label>FEATURES (comma)</label><input type="text" id="formFeatures" placeholder="Auto Portal, Pickup Collect, Anti-AFK"></div></div>
+    <div class="admin-form-group"><label>🎨 IMAGE URL (opsional)</label><input type="text" id="formImage" placeholder="https://example.com/thumbnail.jpg"></div>
+    <div class="admin-form-group"><label>LUA SCRIPT CODE *</label><textarea id="formCode" rows="10" placeholder="-- paste your script here..."></textarea></div>
+    <div style="display: flex; gap: 12px; margin-top: 15px;"><button type="submit" class="btn btn-success" style="flex:1;">💾 SAVE / UPDATE</button><button type="button" id="cancelFormBtn" class="btn btn-raw" style="flex:1;">CANCEL</button></div>
+  </form>
+</div></div></div>
 
 <script>
-  // ---------- DEFAULT SCRIPT DATASET ----------
+  // ========== DEFAULT SCRIPTS (dengan image contoh) ==========
   const defaultScripts = [
-    { title: "Wonder Chase V3", game: "WONDER CHASE OBBY", desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.", tag: "free", features: ["Auto Portal","Pickup Collect","Anti-AFK","Auto Replay"], code: `-- Wonder Chase V3 | RobloxScriptHub\nlocal Players = game:GetService("Players")\nlocal VirtualUser = game:GetService("VirtualUser")\nlocal lp = Players.LocalPlayer\nlp.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame) task.wait(1) VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame) end)\nprint("[WonderChase] Loaded")` },
-    { title: "Orb Collector ESP", game: "ANY GAME (ORB)", desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster.", tag: "keyless", features: ["Auto Collect","ESP RGB","FPS Boost"], code: `-- Orb Collector ESP\nlocal RunService = game:GetService("RunService")\ngetgenv().OrbESP = true\nRunService.Heartbeat:Connect(function()\n    for _, obj in pairs(workspace:GetDescendants()) do\n        if obj:IsA("BasePart") and obj.Name:lower():find("orb") then\n            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, obj, 0)\n        end\n    end\nend)` },
-    { title: "Inf Point Clicker", game: "ECLIPSE JOIN & CLAIM", desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan WalkSpeed boost.", tag: "keyless", features: ["Inf Points","WalkSpeed","Toggle"], code: `-- Inf Point\nlocal RunService = game:GetService("RunService")\ngetgenv().InfPoint = true\nRunService.Heartbeat:Connect(function()\n    if getgenv().InfPoint then\n        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50\n        pcall(function() game:GetService("ReplicatedStorage"):WaitChild("AddPoint"):FireServer() end)\n    end\nend)` },
-    { title: "Anti Lag Ultimate", game: "ALL GAMES", desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog.", tag: "free", features: ["Low Quality","No Shadow","Hide Players"], code: `-- Anti Lag\nsettings().Rendering.QualityLevel = 1\ngame:GetService("Lighting").GlobalShadows = false\nprint("AntiLag Applied")` }
+    { title: "Wonder Chase V3", game: "WONDER CHASE OBBY", desc: "Auto play obby dengan portal teleportation, sticker & pickup collection, anti-replay otomatis.", tag: "free", features: ["Auto Portal","Pickup Collect","Anti-AFK","Auto Replay"], image: "https://placehold.co/400x200/0d0d2b/00f5ff?text=Wonder+Chase", code: `-- Wonder Chase V3 | RobloxScriptHub\nlocal Players = game:GetService("Players")\nlocal VirtualUser = game:GetService("VirtualUser")\nlocal lp = Players.LocalPlayer\nlp.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame) task.wait(1) VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame) end)\nprint("[WonderChase] Loaded")` },
+    { title: "Orb Collector ESP", game: "ANY GAME (ORB)", desc: "Auto collect semua orb di workspace dengan ESP BillboardGui RGB, FPS booster, dan distance display.", tag: "keyless", features: ["Auto Collect","ESP RGB","FPS Boost"], image: "https://placehold.co/400x200/0d0d2b/39ff14?text=Orb+ESP", code: `-- Orb Collector ESP\nlocal RunService = game:GetService("RunService")\ngetgenv().OrbESP = true\nRunService.Heartbeat:Connect(function()\n    for _, obj in pairs(workspace:GetDescendants()) do\n        if obj:IsA("BasePart") and obj.Name:lower():find("orb") then\n            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, obj, 0)\n        end\n    end\nend)` },
+    { title: "Inf Point Clicker", game: "ECLIPSE JOIN & CLAIM", desc: "Toggle Infinite Point yang fire AddPoint:FireServer() dan WalkSpeed boost.", tag: "keyless", features: ["Inf Points","WalkSpeed","Toggle"], image: "https://placehold.co/400x200/0d0d2b/ff2d78?text=Inf+Point", code: `-- Inf Point\nlocal RunService = game:GetService("RunService")\ngetgenv().InfPoint = true\nRunService.Heartbeat:Connect(function()\n    if getgenv().InfPoint then\n        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50\n        pcall(function() game:GetService("ReplicatedStorage"):WaitChild("AddPoint"):FireServer() end)\n    end\nend)` },
+    { title: "Anti Lag Ultimate", game: "ALL GAMES", desc: "Optimasi performa Roblox: kurangi render quality, matiin shadow, fog, particle.", tag: "free", features: ["Low Quality","No Shadow","Hide Players"], image: "https://placehold.co/400x200/0d0d2b/bf00ff?text=Anti+Lag", code: `-- Anti Lag\nsettings().Rendering.QualityLevel = 1\ngame:GetService("Lighting").GlobalShadows = false\nprint("AntiLag Applied")` }
   ];
 
   let scriptsDB = [];
@@ -173,17 +188,17 @@
       try {
         scriptsDB = JSON.parse(stored);
         if(!Array.isArray(scriptsDB)) throw new Error();
-      } catch(e) { scriptsDB = [...defaultScripts]; }
+      } catch(e) { scriptsDB = JSON.parse(JSON.stringify(defaultScripts)); }
     } else {
-      scriptsDB = [...defaultScripts];
+      scriptsDB = JSON.parse(JSON.stringify(defaultScripts));
     }
-    // ensure every script has features array
-    scriptsDB = scriptsDB.map(s => ({ ...s, features: Array.isArray(s.features) ? s.features : (s.features ? s.features.split(',') : []) }));
+    scriptsDB = scriptsDB.map(s => ({ ...s, features: Array.isArray(s.features) ? s.features : (s.features ? s.features.split(',').map(f=>f.trim()) : []) }));
     saveToLocal();
   }
   function saveToLocal() { localStorage.setItem('RobloxScriptHub_DB', JSON.stringify(scriptsDB)); }
 
-  // Helper: getTag html
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
   function getTagHtml(tag) {
     if(tag==='free') return '<span class="card-tag tag-free">FREE</span>';
     if(tag==='keyless') return '<span class="card-tag tag-keyless">KEYLESS</span>';
@@ -201,13 +216,14 @@
     document.getElementById('countAll').innerText = scriptsDB.length;
     document.getElementById('countShown').innerText = filtered.length;
     if(filtered.length===0) {
-      grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>No scripts found for "<b>${searchQuery}</b>"</div>`;
+      grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>No scripts found for "<b>${escapeHtml(searchQuery)}</b>"</div>`;
       return;
     }
-    grid.innerHTML = filtered.map((s, idx) => {
-      const originalIdx = scriptsDB.findIndex(orig => orig.title === s.title && orig.code === s.code); // fallback for index
-      const realIdx = scriptsDB.indexOf(s);
-      return `<div class="card" style="animation-delay:${(idx%10)*0.05}s" data-idx="${realIdx}">
+    grid.innerHTML = filtered.map(s => {
+      const realIdx = scriptsDB.findIndex(orig => orig.title === s.title && orig.code === s.code);
+      const imageHtml = s.image ? `<img class="card-image" src="${escapeHtml(s.image)}" alt="${escapeHtml(s.title)}" onerror="this.style.display='none'">` : '';
+      return `<div class="card" style="animation-delay:0s" data-idx="${realIdx}">
+        ${imageHtml}
         <div class="card-header"><div class="card-title">${escapeHtml(s.title)}</div>${getTagHtml(s.tag)}</div>
         <div class="card-game">📁 ${escapeHtml(s.game)}</div>
         <div class="card-desc">${escapeHtml(s.desc)}</div>
@@ -216,8 +232,6 @@
       </div>`;
     }).join('');
   }
-
-  function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
   window.copyScript = function(idx, btn) {
     navigator.clipboard.writeText(scriptsDB[idx].code).then(() => {
@@ -232,6 +246,7 @@
     document.getElementById('rawModal').classList.add('open');
     document.getElementById('modalCopyBtn').onclick = () => { navigator.clipboard.writeText(s.code); const copyBtn = document.getElementById('modalCopyBtn'); copyBtn.innerText = '✓ COPIED'; setTimeout(()=> copyBtn.innerText = 'COPY', 1600); };
   };
+
   // Admin functions
   function refreshAdminList() {
     const container = document.getElementById('adminScriptsList');
@@ -239,7 +254,7 @@
     container.innerHTML = `<div style="font-family:monospace; margin-bottom:12px;">📋 Total scripts: ${scriptsDB.length}</div>`;
     scriptsDB.forEach((scr, i) => {
       const div = document.createElement('div');
-      div.style.cssText = 'background:#0a0a1a; margin-bottom:10px; padding:12px; border-radius:10px; border-left:3px solid #ff2d78; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;';
+      div.className = 'script-list-item';
       div.innerHTML = `<div><strong style="color:#00f5ff;">${escapeHtml(scr.title)}</strong><span style="color:#9090cc; margin-left:10px;font-size:0.7rem;">${scr.tag}</span><div style="font-size:0.7rem; color:#6060aa;">${escapeHtml(scr.game)}</div></div>
       <div><button class="btn btn-copy" style="padding:4px 12px; font-size:0.7rem;" onclick="editScriptByAdmin(${i})">✏️ EDIT</button>
       <button class="btn btn-danger" style="padding:4px 12px; font-size:0.7rem; margin-left:8px;" onclick="deleteScriptByAdmin(${i})">🗑️ DELETE</button></div>`;
@@ -251,14 +266,15 @@
     document.getElementById('editIndex').value = idx;
     document.getElementById('formTitle').value = s.title;
     document.getElementById('formGame').value = s.game;
-    document.getElementById('formDesc').value = s.desc;
+    document.getElementById('formDesc').value = s.desc || '';
     document.getElementById('formTag').value = s.tag;
-    document.getElementById('formFeatures').value = s.features.join(', ');
+    document.getElementById('formFeatures').value = Array.isArray(s.features) ? s.features.join(', ') : '';
+    document.getElementById('formImage').value = s.image || '';
     document.getElementById('formCode').value = s.code;
     document.getElementById('adminModal').classList.add('open');
   };
   window.deleteScriptByAdmin = function(idx) {
-    if(confirm(`Permanently delete "${scriptsDB[idx].title}"?`)) {
+    if(confirm(`Permanently delete "${scriptsDB[idx].title}"? This cannot be undone.`)) {
       scriptsDB.splice(idx,1);
       saveToLocal();
       renderGrid();
@@ -272,8 +288,15 @@
     document.getElementById('formDesc').value = '';
     document.getElementById('formTag').value = 'free';
     document.getElementById('formFeatures').value = '';
+    document.getElementById('formImage').value = '';
     document.getElementById('formCode').value = '';
   }
+
+  // Event Listeners
+  document.getElementById('adminButton')?.addEventListener('click', () => {
+    refreshAdminList();
+    document.getElementById('adminModal').classList.add('open');
+  });
   document.getElementById('newScriptBtn')?.addEventListener('click',()=>{ resetAdminForm(); document.getElementById('editIndex').value = -1; document.getElementById('adminModal').classList.add('open'); });
   document.getElementById('adminForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -284,6 +307,7 @@
       desc: document.getElementById('formDesc').value.trim(),
       tag: document.getElementById('formTag').value,
       features: document.getElementById('formFeatures').value.split(',').map(f=>f.trim()).filter(f=>f),
+      image: document.getElementById('formImage').value.trim(),
       code: document.getElementById('formCode').value
     };
     if(!newScript.title || !newScript.game || !newScript.code) { alert("Title, Game and Code required!"); return; }
@@ -296,36 +320,16 @@
     resetAdminForm();
   });
   document.getElementById('cancelFormBtn')?.addEventListener('click',()=>{ document.getElementById('adminModal').classList.remove('open'); resetAdminForm(); });
-  
-  // Admin modal toggle with `~` key
-  let adminPanelOpen = false;
-  document.addEventListener('keydown', (e) => {
-    if(e.key === '`' || e.key === '~') {
-      e.preventDefault();
-      if(!document.getElementById('adminModal').classList.contains('open')) {
-        refreshAdminList();
-        document.getElementById('adminModal').classList.add('open');
-        document.getElementById('modeIndicator').innerHTML = '<span style="color:#39ff14;">ADMIN</span>';
-        document.getElementById('adminIndicator').innerHTML = '👑 ADMIN MODE ACTIVE';
-      } else {
-        document.getElementById('adminModal').classList.remove('open');
-        document.getElementById('modeIndicator').innerHTML = 'USER';
-        document.getElementById('adminIndicator').innerHTML = '🔒 ADMIN MODE (press ~)';
-      }
-    }
-  });
-  // close modal events
-  document.getElementById('adminModalClose')?.addEventListener('click',()=>{ document.getElementById('adminModal').classList.remove('open'); document.getElementById('modeIndicator').innerHTML = 'USER'; document.getElementById('adminIndicator').innerHTML = '🔒 ADMIN MODE (press ~)'; });
+  document.getElementById('adminModalClose')?.addEventListener('click',()=>{ document.getElementById('adminModal').classList.remove('open'); });
+  document.getElementById('adminModal')?.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
   document.getElementById('modalClose').onclick = ()=>document.getElementById('rawModal').classList.remove('open');
   document.getElementById('modalCloseBtn').onclick = ()=>document.getElementById('rawModal').classList.remove('open');
   document.getElementById('rawModal').onclick = function(e){ if(e.target===this) this.classList.remove('open'); };
-  document.getElementById('adminModal').onclick = function(e){ if(e.target===this) { this.classList.remove('open'); document.getElementById('modeIndicator').innerHTML = 'USER'; } };
   document.getElementById('searchInput').addEventListener('input', e => { searchQuery = e.target.value; renderGrid(); });
   document.getElementById('filterTabs').addEventListener('click', e => { if(e.target.classList.contains('tab')){ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); e.target.classList.add('active'); activeFilter = e.target.dataset.filter; renderGrid(); } });
   
   loadData();
   renderGrid();
-  document.getElementById('modeIndicator').innerHTML = 'USER';
 </script>
 </body>
 </html>
